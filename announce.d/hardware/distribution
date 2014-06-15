@@ -1,0 +1,1 @@
+call(['lsb_release','-ds'])[0]
