@@ -16,6 +16,7 @@ import sys
 #sys.stdout = open('/dev/stdout', 'w')
 #sys.stderr = open('/dev/stderr', 'w')
 
+# Utility functions for the announce.d files
 def toUTF8(line):
   return line.decode("utf-8")
 
@@ -24,6 +25,20 @@ def call(cmdnargs):
   lines = output.splitlines()
   lines = [toUTF8(line) for line in lines]
   return lines
+
+# Local used functions
+def setValue(node,path,value):
+  ''' Sets a value inside a complex data dictionary.
+      The path Array must have at least one element.
+  '''
+  key = path[0]
+  if len(path) == 1:
+    node[key] = value;
+  elif key in node:
+    setValue(node[key],path[1:],value)
+  else:
+    node[path[0]] = {}
+    setValue(node[key],path[1:],value)
 
 parser = argparse.ArgumentParser()
 
@@ -41,11 +56,10 @@ data = {}
 for dirname, dirnames, filenames in os.walk(directory):
   for filename in filenames:
     if filename[0] != '.':
-      print(dirname + os.sep + filename)
+      relPath = os.path.relpath(dirname + os.sep + filename,directory);
       fh = open(dirname + os.sep + filename,'r', errors='replace')
       source = fh.read()
       fh.close()
       value = eval(source)
-      data[filename] = value
-print(dirname + os.sep + filename)
+      setValue(data,relPath.rsplit(os.sep),value)
 print(json.dumps(data))
