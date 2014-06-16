@@ -1,1 +1,1 @@
-call(['lsb_release','-ds'])[0]
+call(['lsb_release','-is'])[0]
