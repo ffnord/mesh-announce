@@ -7,3 +7,7 @@ A gluon compatible status script for alfred in python.
 
  * lsb_release
  * alfred binary in PATH
+
+## Setup
+
+Add _announce.sh_ to your cronjobs, and let it run every minute.
