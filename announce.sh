@@ -1,5 +1,6 @@
 #!/bin/sh
 
-ALFRED_DATA_TYPE=158
+DIR="$(dirname "$0")"
 
-"$(dirname "$0")"/announce.py -d "$(dirname "$0")"/announce.d/ | gzip | alfred -s ${ALFRED_DATA_TYPE}
+"${DIR}"/announce.py -d "${DIR}"/announce.d/nodeinfo/ | gzip | alfred -s 158
+"${DIR}"/announce.py -d "${DIR}"/announce.d/statistics/ | gzip | alfred -s 159
