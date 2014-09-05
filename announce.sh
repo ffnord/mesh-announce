@@ -1,9 +1,6 @@
 #!/bin/sh
 
-ALFRED_DATA_TYPES="158 159"
-
 DIR="$(dirname "$0")"
 
-for ALFRED_DATA_TYPE in ${ALFRED_DATA_TYPES}; do
-	"${DIR}"/announce.py -d "${DIR}"/announce.${ALFRED_DATA_TYPE}.d/ | gzip | alfred -s ${ALFRED_DATA_TYPE}
-done
+"${DIR}"/announce.py -d "${DIR}"/announce.d/nodeinfo/ | gzip | alfred -s 158
+"${DIR}"/announce.py -d "${DIR}"/announce.d/statistics/ | gzip | alfred -s 159
