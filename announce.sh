@@ -2,4 +2,6 @@
 
 ALFRED_DATA_TYPE=158
 
-"$(dirname "$0")"/announce.py -d "$(dirname "$0")"/announce.d/ | gzip | alfred -s ${ALFRED_DATA_TYPE}
+DIR="$(dirname "$0")"
+
+"${DIR}"/announce.py -d "${DIR}"/announce.d/ | gzip | alfred -s ${ALFRED_DATA_TYPE}
