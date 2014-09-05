@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ALFRED_DATA_TYPES="158"
+ALFRED_DATA_TYPES="158 159"
 
 DIR="$(dirname "$0")"
 
