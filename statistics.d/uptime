@@ -1,1 +1,1 @@
-float(call(['cat','/proc/uptime'])[0].rsplit(' ')[0])
+float(open('/proc/uptime').read().split(' ')[0])
