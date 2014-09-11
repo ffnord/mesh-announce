@@ -11,4 +11,7 @@ A gluon compatible status script for alfred in python.
 
 ## Setup
 
-Add _announce.sh_ to your cronjobs, and let it run every minute.
+Add _announce.sh_ to your cronjobs, and let it run every minute, e.g.
+```
+PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/alfred-announce/announce.sh
+```
