@@ -1,1 +1,1 @@
-0.5-gateway
+call(['lsb_release','-rs'])[0]
