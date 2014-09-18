@@ -12,5 +12,5 @@
         'bytes' if key.endswith('_bytes') else 'dropped' if key.endswith('_dropped') else 'packets',
         value
     )
-    for key, value in map(lambda s: list(map(str.strip, s.split(': ', 1))), call(['ethtool', '-S', 'bat0'])[1:])
+    for key, value in map(lambda s: list(map(str.strip, s.split(': ', 1))), call(['ethtool', '-S', batadv_dev])[1:])
 ))
