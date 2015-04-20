@@ -8,7 +8,7 @@ while test $# -gt 0; do
       shift
       ip link show dev $1 > /dev/null
       test $? -ne 0 && exit
-      INTERFACE="-I $1"
+      INTERFACE="-i $1"
       ;;
     -b)
       shift
