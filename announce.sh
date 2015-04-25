@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DIR="$(dirname "$0")"
+SOCKET="-u /var/run/alfred.sock"
 
 while test $# -gt 0; do
   case $1 in
@@ -16,13 +17,17 @@ while test $# -gt 0; do
       test $? -ne 0 && exit
       BATADV="-b $1"
       ;;
+    -u)
+      shift
+      SOCKET="-u $1"
+      ;;
     -h|--help)
-      echo "Usage: $0 [-i <ifname>] [-b <batadv-dev>]"
+      echo "Usage: $0 [-i <ifname>] [-b <batadv-dev>] [-u <alfred socket>]"
       exit
       ;;
   esac
   shift
 done
 
-"${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | gzip | alfred $INTERFACE -s 158
-"${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | gzip | alfred $INTERFACE -s 159
+"${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 158
+"${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 159
