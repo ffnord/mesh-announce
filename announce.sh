@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$(dirname "$0")"
-SOCKET="-u /var/run/alfred.sock"
+SOCKET=""
 
 while test $# -gt 0; do
   case $1 in
