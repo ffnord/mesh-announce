@@ -8,10 +8,10 @@ from gather import gather_data
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-d', '--directory', action='store',
-                  help='structure directory',required=True)
+                    help='structure directory', required=True)
 
 parser.add_argument('-b', '--batman', action='store',
-                  help='batman-adv device',default='bat0')
+                    help='batman-adv device', default='bat0')
 
 args = parser.parse_args()
 
