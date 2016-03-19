@@ -29,7 +29,7 @@ def _eval_snippet(f, env):
     real_env = dict(env)
     real_env.update({
         'call': call,
-        'socket': import_module('socket'),
+        'import_module': import_module
     })
 
     # compile file
