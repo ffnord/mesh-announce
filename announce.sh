@@ -2,6 +2,7 @@
 
 DIR="$(dirname "$0")"
 SOCKET=""
+GZIP="-cn9"
 
 while test $# -gt 0; do
   case $1 in
@@ -29,5 +30,5 @@ while test $# -gt 0; do
   shift
 done
 
-"${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 158
-"${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 159
+"${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | GZIP=$GZIP gzip | alfred $INTERFACE $SOCKET -s 158
+"${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | GZIP=$GZIP gzip| alfred $INTERFACE $SOCKET -s 159
