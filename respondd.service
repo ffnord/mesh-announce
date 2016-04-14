@@ -1,0 +1,10 @@
+[Unit]
+Description=Respondd
+
+[Service]
+ExecStart=/opt/ffnord-alfred-announce/respondd.py
+Restart=always
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
