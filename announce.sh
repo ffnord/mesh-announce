@@ -29,5 +29,7 @@ while test $# -gt 0; do
   shift
 done
 
+export GZIP="--best"
+
 "${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 158
 "${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 159
