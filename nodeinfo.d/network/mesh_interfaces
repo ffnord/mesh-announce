@@ -1,1 +1,0 @@
-[open('/sys/class/net/' + iface + '/address').read().strip() for iface in map(lambda line: line.split(':')[0], call(['batctl', '-m', batadv_dev, 'if']))]
