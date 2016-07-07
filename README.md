@@ -10,7 +10,7 @@ These scripts are replacements for the *[respondd]* and *[gluon-alfred]* package
 
  * lsb\_release
  * ethtool
- * python3
+ * python3 (>= 3.3)
  * If using alfred: alfred binary in PATH
 
 ## Setup
