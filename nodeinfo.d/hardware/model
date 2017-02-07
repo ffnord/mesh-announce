@@ -1,0 +1,1 @@
+import_module('re').search("model name\s*:\s*(.*)",open('/proc/cpuinfo').read()).group(1)
