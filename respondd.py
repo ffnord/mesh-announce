@@ -75,7 +75,8 @@ if __name__ == "__main__":
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
     server = socketserver.ThreadingUDPServer(
         ("", args.port),
-        get_handler(args.directory, {'batadv_dev': args.batadv_iface})
+        get_handler(args.directory, {'batadv_dev': args.batadv_iface}),
+        bind_and_activate = False
     )
 
     if args.mcast_ifaces:
@@ -89,4 +90,7 @@ if __name__ == "__main__":
                     mreq
                 )
 
+    server.allow_reuse_address = True
+    server.server_bind()
+    server.server_activate()
     server.serve_forever()
