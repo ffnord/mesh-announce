@@ -19,7 +19,7 @@ These scripts are replacements for the *[respondd]* and *[gluon-alfred]* package
 
 Add _announce.sh_ to your cronjobs, and let it run every minute, e.g.
 ```
-PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/alfred-announce/announce.sh
+PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/mesh-announce/announce.sh
 ```
 
 ### Respondd
