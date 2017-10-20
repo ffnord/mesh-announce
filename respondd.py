@@ -6,6 +6,7 @@ import socket
 import struct
 import json
 import os
+import threading
 from zlib import compress
 
 from gather import gather_data
@@ -72,13 +73,13 @@ if __name__ == "__main__":
                         help='batman-adv interface (default: bat0)')
     args = parser.parse_args()
 
-    socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
-    server = socketserver.ThreadingUDPServer(
-        ("", args.port),
-        get_handler(args.directory, {'batadv_dev': args.batadv_iface})
-    )
+    for iface in args.mcast_ifaces:
+        socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
+        server = socketserver.ThreadingUDPServer(
+            (args.group, args.port, 0, socket.if_nametoindex(iface)),
+            get_handler(args.directory, {'batadv_dev': args.batadv_iface})
+        )
 
-    if args.mcast_ifaces:
         group_bin = socket.inet_pton(socket.AF_INET6, args.group)
         for (inf_id, inf_name) in socket.if_nameindex():
             if inf_name in args.mcast_ifaces:
@@ -89,4 +90,4 @@ if __name__ == "__main__":
                     mreq
                 )
 
-    server.serve_forever()
+        threading.Thread(target=server.serve_forever).start()
