@@ -9,6 +9,7 @@ import os
 import threading
 from zlib import compress
 
+import netifaces
 from gather import gather_data
 
 
@@ -52,6 +53,7 @@ def get_handler(directory, env):
 
     return ResponddUDPHandler
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
@@ -73,9 +75,13 @@ if __name__ == "__main__":
                         help='batman-adv interface (default: bat0)')
     args = parser.parse_args()
 
+    socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
     for iface in args.mcast_ifaces:
-        socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
-        server = socketserver.ThreadingUDPServer(
+        # multicast
+        print("binding to {0}%{1} port {2}...".format(
+            args.group, iface, args.port)
+        )
+        mcast_server = socketserver.ThreadingUDPServer(
             (args.group, args.port, 0, socket.if_nametoindex(iface)),
             get_handler(args.directory, {'batadv_dev': args.batadv_iface})
         )
@@ -84,10 +90,28 @@ if __name__ == "__main__":
         for (inf_id, inf_name) in socket.if_nameindex():
             if inf_name in args.mcast_ifaces:
                 mreq = group_bin + struct.pack('@I', inf_id)
-                server.socket.setsockopt(
+                mcast_server.socket.setsockopt(
                     socket.IPPROTO_IPV6,
                     socket.IPV6_JOIN_GROUP,
                     mreq
                 )
 
-        threading.Thread(target=server.serve_forever).start()
+        threading.Thread(target=mcast_server.serve_forever).start()
+
+        # unicast
+        lladdrs = [
+            item['addr']
+            for item
+            in netifaces.ifaddresses(iface).get(socket.AF_INET6, [])
+            if item['addr'].startswith('fe80::')
+        ]
+
+        for lladdr in lladdrs:
+            print("binding to {0}%{1} port {2}...".format(
+                lladdr, iface, args.port)
+            )
+            ucast_server = socketserver.ThreadingUDPServer(
+                (lladdr, args.port, 0, socket.if_nametoindex(iface)),
+                get_handler(args.directory, {'batadv_dev': args.batadv_iface})
+            )
+            threading.Thread(target=ucast_server.serve_forever).start()

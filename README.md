@@ -11,6 +11,7 @@ These scripts are replacements for the *[respondd]* and *[gluon-alfred]* package
  * lsb\_release
  * ethtool
  * python3 (>= 3.3)
+ * python3-netifaces
  * If using alfred: alfred binary in PATH
 
 ## Setup
