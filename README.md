@@ -14,17 +14,20 @@ These scripts are replacements for the *[respondd]* and *[gluon-alfred]* package
  * If using alfred: alfred binary in PATH
 
 ## Setup
+```
+git clone https://github.com/ffnord/mesh-announce /opt/mesh-announce
+```
 
 ### Alfred
 
-Add _announce.sh_ to your cronjobs, and let it run every minute, e.g.
+Open the Alfred port UDP 16962 in your firewall. Add _announce.sh_ to your cronjobs, and let it run every minute, e.g.
 ```
 PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/mesh-announce/announce.sh
 ```
 
 ### Respondd
 
-Assuming you are using systemd, copy the `respondd.service` file to `/etc/systemd/system/`, and adapt the path to your checkout of the repository in the line starting with `ExecStart=`.
+Assuming you are using systemd, copy the `respondd.service` file to `/etc/systemd/system/`, and adapt the path to your checkout of the repository in the line starting with `ExecStart=`. Open the respondd port UDP 1001 in your firewall.
 
 Afterwards, execute these commands:
 ```
