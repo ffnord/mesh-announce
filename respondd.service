@@ -2,7 +2,7 @@
 Description=Respondd
 
 [Service]
-ExecStart=/opt/ffnord-alfred-announce/respondd.py
+ExecStart=/opt/mesh-announce/respondd.py
 Restart=always
 Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
