@@ -28,19 +28,20 @@ PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/mesh-announce/announce.sh
 ### Respondd
 
 Assuming you are using systemd:
+
+* create a systemd service:
 ```
-cp respondd.service /etc/systemd/system/
+cp respondd.service /etc/systemd/system/respondd.service
 ```
-- adapt the interfaces in the line starting with `ExecStart=` (If you have a custom path, adapt the path to your checkout of the repository)
-- open UDP port 1001 in your firewall:
+* adapt the interfaces in the line starting with `ExecStart=` (If you have another path, adapt the path to your checkout of the repository)
+* open UDP port 1001 in your firewall:
 ```
 iptables -A bat-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
 iptables -A mesh-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
 ip6tables -A bat-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
 ip6tables -A mesh-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
 ```
-
-Afterwards, execute these commands:
+* initiate the systemd service:
 ```
 systemctl daemon-reload
 systemctl start respondd
