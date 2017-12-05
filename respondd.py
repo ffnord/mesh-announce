@@ -7,6 +7,7 @@ import struct
 import json
 import os
 import threading
+import time
 from zlib import compress
 
 import netifaces
@@ -54,6 +55,47 @@ def get_handler(directory, env):
     return ResponddUDPHandler
 
 
+def listen(iface, group, port, directory, env):
+    # multicast
+    print("binding to {0}%{1} port {2}...".format(
+        group, iface, port)
+    )
+    mcast_server = socketserver.ThreadingUDPServer(
+        (group, port, 0, socket.if_nametoindex(iface)),
+        get_handler(directory, env)
+    )
+
+    group_bin = socket.inet_pton(socket.AF_INET6, group)
+    mreq = group_bin + struct.pack('@I', socket.if_nametoindex(iface))
+    mcast_server.socket.setsockopt(
+        socket.IPPROTO_IPV6,
+        socket.IPV6_JOIN_GROUP,
+        mreq
+    )
+
+    threading.Thread(target=mcast_server.serve_forever).start()
+
+    # unicast
+    lladdrs = [
+        item['addr']
+        for item
+        in netifaces.ifaddresses(iface).get(socket.AF_INET6, [])
+        if item['addr'].startswith('fe80::')
+    ]
+
+    for lladdr in lladdrs:
+        print("binding to {0}%{1} port {2}...".format(
+            lladdr, iface, port)
+        )
+        ucast_server = socketserver.ThreadingUDPServer(
+            (lladdr, port, 0, socket.if_nametoindex(iface)),
+            get_handler(args.directory, env)
+        )
+        threading.Thread(target=ucast_server.serve_forever).start()
+
+    return socket.if_nametoindex(iface), [mcast_server, ucast_server]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
@@ -76,42 +118,43 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
+
+    env = {
+        'batadv_dev': args.batadv_iface
+    }
+
+    if_threads = {}
     for iface in args.mcast_ifaces:
-        # multicast
-        print("binding to {0}%{1} port {2}...".format(
-            args.group, iface, args.port)
-        )
-        mcast_server = socketserver.ThreadingUDPServer(
-            (args.group, args.port, 0, socket.if_nametoindex(iface)),
-            get_handler(args.directory, {'batadv_dev': args.batadv_iface})
-        )
+        if_threads[iface] = listen(
+            iface, args.group, args.port, args.directory, env)
 
-        group_bin = socket.inet_pton(socket.AF_INET6, args.group)
-        for (inf_id, inf_name) in socket.if_nameindex():
-            if inf_name in args.mcast_ifaces:
-                mreq = group_bin + struct.pack('@I', inf_id)
-                mcast_server.socket.setsockopt(
-                    socket.IPPROTO_IPV6,
-                    socket.IPV6_JOIN_GROUP,
-                    mreq
-                )
+    while True:
+        time.sleep(15)
+        for iface, data in if_threads.items():
+            ifidx, threads = data
+            try:
+                if socket.if_nametoindex(iface) != ifidx:
+                    # interface has reappeared with a different index
+                    if threads:
+                        print("interface {0} disappeared, unbinding..."
+                              .format(iface))
+                        for thread in threads:
+                            # make sure we remove all old socketservers first
+                            thread.shutdown()
+                            thread.server_close()
+                        if_threads[iface] = ifidx, []
+                    print("interface {0} reappeared, rebinding..."
+                          .format(iface))
+                    if_threads[iface] = listen(
+                        iface, args.group, args.port, args.directory, env)
+            except OSError as ex:
+                # interface is missing, stop related server threads
+                if threads:
+                    print("interface {0} disappeared, unbinding..."
+                          .format(iface))
+                    for thread in threads:
+                        thread.shutdown()
+                        thread.server_close()
+                    if_threads[iface] = ifidx, []
 
-        threading.Thread(target=mcast_server.serve_forever).start()
 
-        # unicast
-        lladdrs = [
-            item['addr']
-            for item
-            in netifaces.ifaddresses(iface).get(socket.AF_INET6, [])
-            if item['addr'].startswith('fe80::')
-        ]
-
-        for lladdr in lladdrs:
-            print("binding to {0}%{1} port {2}...".format(
-                lladdr, iface, args.port)
-            )
-            ucast_server = socketserver.ThreadingUDPServer(
-                (lladdr, args.port, 0, socket.if_nametoindex(iface)),
-                get_handler(args.directory, {'batadv_dev': args.batadv_iface})
-            )
-            threading.Thread(target=ucast_server.serve_forever).start()
