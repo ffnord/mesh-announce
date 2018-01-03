@@ -27,24 +27,12 @@ PATH=/opt/alfred/:/bin:/usr/bin:/sbin:$PATH /opt/mesh-announce/announce.sh
 
 ### Respondd
 
-Assuming you are using systemd:
-
-* create a systemd service:
-```
-cp respondd.service /etc/systemd/system/respondd.service
-```
-* adapt the interfaces in the line starting with `ExecStart=` (If you have another path, adapt the path to your checkout of the repository)
-* open UDP port 1001 in your firewall:
-```
-iptables -A bat-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
-iptables -A mesh-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
-ip6tables -A bat-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
-ip6tables -A mesh-input -p udp -m udp --dport 1001 -m comment --comment respondd -j ACCEPT
-```
-* initiate the systemd service:
+Assuming you are using systemd, copy the `respondd.service` file to `/etc/systemd/system/`. Open the copy and adapt the path to your checkout of the repository and the interface names in the line starting with `ExecStart=`. Afterwards, start the service and optionally set it to autostart:
 ```
 systemctl daemon-reload
 systemctl start respondd
 # autostart on boot
 systemctl enable respondd
 ```
+
+Furthermore, you have to open UDP port 1001 in your IPv6 firewall for all mesh and B.A.T.M.A.N. advanced interfaces. Please *don't* open the port globally, as it can be used for traffic amplification attacks. You also might want to ratelimit it on the allowed interfaces for the same reason.
