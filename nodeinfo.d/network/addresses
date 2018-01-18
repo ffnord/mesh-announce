@@ -7,11 +7,14 @@
             and not int(line[4], 16) & (0x40 | 0x20)
             # address is neither tentative nor deprecated
     ]
-)(
+)([dev for devgroup in (lambda devs:[
     # generate the list of ifaces
-    [ batadv_dev ] +
+    [dev] +
     list(map(
-        lambda s: s[len('/sys/class/net/{}/upper_'.format(batadv_dev)):],
-        import_module('glob').glob('/sys/class/net/{}/upper_*'.format(batadv_dev))
+      lambda s: s[len('/sys/class/net/{}/upper_'.format(dev)):],
+      import_module('glob').glob('/sys/class/net/{}/upper_*'.format(dev))
     ))
-)
+    for dev in devs
+  ])([ batadv_dev ] + batadv_dev_extra)
+  for dev in devgroup
+])
