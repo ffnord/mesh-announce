@@ -1,1 +1,0 @@
-float(open('/proc/uptime').read().split(' ')[1])

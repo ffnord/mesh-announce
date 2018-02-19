@@ -31,5 +31,5 @@ done
 
 export GZIP="--best"
 
-"${DIR}"/announce.py -d "${DIR}"/nodeinfo.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 158
-"${DIR}"/announce.py -d "${DIR}"/statistics.d/ ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 159
+"${DIR}"/announce.py -d nodeinfo ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 158
+"${DIR}"/announce.py -d statistics ${BATADV} | gzip | alfred $INTERFACE $SOCKET -s 159
