@@ -1,5 +1,6 @@
 [Unit]
 Description=Respondd
+After=network.target
 
 [Service]
 ExecStart=/opt/mesh-announce/respondd.py -d /opt/mesh-announce -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if>
