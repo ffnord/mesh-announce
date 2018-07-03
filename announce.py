@@ -10,12 +10,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--directory', action='store',
                     help='structure directory', required=True)
 
-parser.add_argument('-b', '--batman', action='store',
-                    help='batman-adv device', default='bat0')
+parser.add_argument('-b', '--batman', action='append',
+                    help='batman-adv device')
 
 args = parser.parse_args()
 
+if not args.batman:
+    args.batman = ['bat0']
+
 print(json.dumps(gather_data(
     args.directory,
-    {'batadv_dev': args.batman}
+    {'batadv_ifaces': args.batman}
 )))

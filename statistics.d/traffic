@@ -12,5 +12,13 @@
         'bytes' if key.endswith('_bytes') else 'dropped' if key.endswith('_dropped') else 'packets',
         value
     )
-    for key, value in map(lambda s: list(map(str.strip, s.split(': ', 1))), call(['ethtool', '-S', batadv_dev])[1:])
+    for key, value in (lambda t:
+       dict(set((a, sum(int(y) for x, y in t if x == a)) for a, b in t)).items()
+    )(list(import_module('itertools').chain(*map(
+        lambda batadv_iface :
+            list(map(lambda s:
+                 list(map(str.strip, s.split(': ', 1))),
+                 call(['ethtool', '-S', batadv_iface])[1:])),
+            batadv_ifaces
+    ))))
 ))

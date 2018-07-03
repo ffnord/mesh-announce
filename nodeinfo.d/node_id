@@ -1,1 +1,1 @@
-open('/sys/class/net/' + batadv_dev + '/address').read().strip().replace(':', '')
+open('/sys/class/net/' + batadv_ifaces[0] + '/address').read().strip().replace(':', '')
