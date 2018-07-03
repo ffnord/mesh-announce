@@ -67,15 +67,18 @@ if __name__ == "__main__":
     parser.add_argument('-d', dest='directory',
                         default='.', metavar='<dir>',
                         help='data provider directory (default: $PWD)')
-    parser.add_argument('-b', dest='batadv_iface',
-                        default='bat0', metavar='<iface>',
+    parser.add_argument('-b', dest='batadv_ifaces',
+                        action='append', metavar='<iface>',
                         help='batman-adv interface (default: bat0)')
     args = parser.parse_args()
+
+    if not args.batadv_ifaces:
+        args.batadv_ifaces = ['bat0']
 
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
     server = socketserver.ThreadingUDPServer(
         ("", args.port),
-        get_handler(args.directory, {'batadv_dev': args.batadv_iface})
+        get_handler(args.directory, {'batadv_ifaces': args.batadv_ifaces})
     )
 
     if args.mcast_ifaces:

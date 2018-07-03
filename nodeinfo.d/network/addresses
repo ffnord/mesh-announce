@@ -9,9 +9,12 @@
     ]
 )(
     # generate the list of ifaces
-    [ batadv_dev ] +
-    list(map(
-        lambda s: s[len('/sys/class/net/{}/upper_'.format(batadv_dev)):],
-        import_module('glob').glob('/sys/class/net/{}/upper_*'.format(batadv_dev))
-    ))
+    batadv_ifaces +
+    list(frozenset(map(
+        lambda s: import_module('os.path').basename(s)[len('upper_'):],
+        import_module('itertools').chain(*map(
+            lambda batadv_iface : import_module('glob').glob('/sys/class/net/{}/upper_*'.format(batadv_iface)),
+            batadv_ifaces
+        ))
+    )))
 )
