@@ -3,7 +3,7 @@
 import json
 import argparse
 
-from gather import gather_data
+from providers import Provider
 
 parser = argparse.ArgumentParser()
 
@@ -15,7 +15,10 @@ parser.add_argument('-b', '--batman', action='store',
 
 args = parser.parse_args()
 
-print(json.dumps(gather_data(
-    args.directory,
-    {'batadv_dev': args.batman}
-)))
+provider = Provider.from_directory('providers',
+    args.directory)
+
+print(json.dumps(provider.call(
+        {'batadv_dev': args.batman}
+    )
+))

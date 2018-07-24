@@ -1,1 +1,0 @@
-open('/sys/module/batman_adv/version').read().strip()

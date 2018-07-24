@@ -1,1 +1,0 @@
-call(['lsb_release','-rs'])[0]

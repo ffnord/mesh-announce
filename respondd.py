@@ -8,25 +8,17 @@ import json
 import os
 from zlib import compress
 
-from gather import gather_data
+from providers import get_providers
 
 
-def get_handler(directory, env):
+def get_handler(providers, env):
     class ResponddUDPHandler(socketserver.BaseRequestHandler):
-        @staticmethod
-        def _get_provider_dir(provider):
-            return os.path.join(directory, "{}.d".format(provider))
-
-        def multi_request(self, providers):
+        def multi_request(self, providernames):
             ret = {}
-            for provider in providers:
-                if '/' in provider:
-                    continue
+            for name in providernames:
                 try:
-                    ret[provider] = gather_data(
-                        self._get_provider_dir(provider),
-                        env
-                    )
+                    provider = providers[name]
+                    ret[provider.name] = provider.call(env)
                 except:
                     pass
             return compress(str.encode(json.dumps(ret)))[2:-4]
@@ -38,11 +30,8 @@ def get_handler(directory, env):
 
             if data.startswith("GET "):
                 response = self.multi_request(data.split(" ")[1:])
-            elif '/' not in data:
-                answer = gather_data(
-                    self._get_provider_dir(data),
-                    env
-                )
+            else:
+                answer = providers[data].call(env)
                 if answer:
                     response = str.encode(json.dumps(answer))
 
@@ -65,7 +54,7 @@ if __name__ == "__main__":
                         action='append', metavar='<iface>',
                         help='interface on which the group is joined')
     parser.add_argument('-d', dest='directory',
-                        default='.', metavar='<dir>',
+                        default='./providers', metavar='<dir>',
                         help='data provider directory (default: $PWD)')
     parser.add_argument('-b', dest='batadv_iface',
                         default='bat0', metavar='<iface>',
@@ -75,7 +64,7 @@ if __name__ == "__main__":
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
     server = socketserver.ThreadingUDPServer(
         ("", args.port),
-        get_handler(args.directory, {'batadv_dev': args.batadv_iface})
+        get_handler(get_providers(args.directory), {'batadv_dev': args.batadv_iface})
     )
 
     if args.mcast_ifaces:

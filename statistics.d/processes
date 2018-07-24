@@ -1,1 +1,0 @@
-dict(zip(('running', 'total'), map(int, open('/proc/loadavg').read().split(' ')[3].split('/'))))
