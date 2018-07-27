@@ -55,7 +55,7 @@ if __name__ == "__main__":
                         help='interface on which the group is joined')
     parser.add_argument('-d', dest='directory',
                         default='./providers', metavar='<dir>',
-                        help='data provider directory (default: $PWD)')
+                        help='data provider directory (default: $PWD/providers)')
     parser.add_argument('-b', dest='batadv_iface',
                         default='bat0', metavar='<iface>',
                         help='batman-adv interface (default: bat0)')
