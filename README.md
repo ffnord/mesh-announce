@@ -71,8 +71,8 @@ for example:
  * `<your-clientbridge-if>`: interfacename of mesh-bridge (for example br-ffXX)
  * `<your-mesh-vpn-if>`: interfacename of fastd or tuneldigger (for example ffXX-mvpn)
  * `<your-batman-if>`: B.A.T.M.A.N interfacename (usually bat-ffXX)
- * `<mesh ipv4 address>`: The ipv4 address of this gateway (usually the ip on interface <your-clientbridge-if>)  
-    you can get the ip with `ip a s dev br-ffXX|grep inet|head -n1|cut -d\  -f 6|sed 's|/.*||g'`
+ * `<mesh ipv4 address>`: The ipv4 address of this gateway (usually the ip on interface `<your-clientbridge-if>`)  
+    you can get the ip with `ip a s dev br-ffXX|grep inet|head -n1|cut -d" " -f 6|sed 's|/.*||g'`
     
 The ipv4 address can be requested for example by
 [ddhcpd](https://github.com/TobleMiner/gluon-sargon/blob/feature-respondd-gateway-update/ddhcpd/files/usr/sbin/ddhcpd-gateway-update#L3)
