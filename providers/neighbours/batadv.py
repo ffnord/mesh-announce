@@ -6,6 +6,8 @@ class Source(providers.DataSource):
         return ['batadv_dev']
 
     def call(self, batadv_dev):
+        if batadv_dev is None:
+            return None
         return (lambda neighbours: {
             open("{}/address".format(path)).read().strip(): {"neighbours": {
                 neigh[0]: {"lastseen": neigh[1], "tq": neigh[2]}

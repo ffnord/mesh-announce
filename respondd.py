@@ -57,17 +57,29 @@ if __name__ == "__main__":
                         default='./providers', metavar='<dir>',
                         help='data provider directory (default: $PWD/providers)')
     parser.add_argument('-b', dest='batadv_iface',
-                        default='bat0', metavar='<iface>',
-                        help='batman-adv interface (default: bat0)')
+                        default=None, metavar='<iface>',
+                        help='batman-adv interface')
+    parser.add_argument('-ba', dest='babel_addr',
+                        default=None, metavar='<socket>',
+                        help='address to babel socket')
     parser.add_argument('-m', dest='mesh_ipv4',
                         metavar='<mesh_ipv4>',
                         help='mesh ipv4 address')
     args = parser.parse_args()
 
+    babel_addr = None
+    if args.babel_addr is not None:
+        ip, port = args.babel_addr.rsplit(':', 1)
+        babel_addr = (ip.strip('[]'), int(port))
+
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
     server = socketserver.ThreadingUDPServer(
         ("", args.port),
-        get_handler(get_providers(args.directory), {'batadv_dev': args.batadv_iface, 'mesh_ipv4': args.mesh_ipv4})
+        get_handler(get_providers(args.directory), {
+            'batadv_dev': args.batadv_iface,
+            'babel_addr': babel_addr,
+            'mesh_ipv4': args.mesh_ipv4
+        })
     )
 
     if args.mcast_ifaces:

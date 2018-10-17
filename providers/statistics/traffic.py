@@ -6,6 +6,8 @@ class Source(providers.DataSource):
         return ['batadv_dev']
 
     def call(self, batadv_dev):
+        if batadv_dev is None:
+            return None
         return (lambda fields:
             dict(
                 (key, dict(
