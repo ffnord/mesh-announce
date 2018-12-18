@@ -16,7 +16,7 @@ class Source(providers.DataSource):
                 glob('/sys/class/net/{}/lower_*'.format(batadv_dev))
         })([
             (line[0], float(line[1].strip('s')), int(line[2].strip(')')), line[4].strip('[]:'))
-            for line in map(lambda l: l.replace('(', '').replace('[', '').split(),
-                open('/sys/kernel/debug/batman_adv/{}/originators'.format(batadv_dev)))
+            for line in map(lambda l: l.replace('* ', '').replace('(', '').replace('[', '').split(),
+                 call(['batctl', '-m', batadv_dev, 'originators', '-H', '-n']))
             if line[0] == line[3]
         ])
