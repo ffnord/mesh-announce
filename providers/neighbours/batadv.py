@@ -3,8 +3,6 @@ import providers
 from providers.util import call
 import re
 
-re_mac = re.compile('([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}')
-
 class Source(providers.DataSource):
     def required_args(self):
         return ['batadv_dev']
