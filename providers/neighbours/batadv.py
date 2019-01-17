@@ -16,7 +16,9 @@ class Source(providers.DataSource):
             mac = open(dev + '/address').read().strip()
             ifneighbours = {}
             for line in lines[2:]:
-                fields = line.replace('(', '').replace(')', '').replace('[', '').replace(']:', '').split()
+                for s in ['(', ')', '[', ']:', ']', '*']:
+                    line = line.replace(s, '')
+                fields = line.split()
                 if fields[4] == ifname and fields[0] == fields[3]:
                     ifneighbours[fields[0]] = {'lastseen': float(fields[1].strip('s')), 'tq': int(fields[2])}
             neighbours[mac] = {'neighbours': ifneighbours}
