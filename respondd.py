@@ -43,7 +43,7 @@ def get_handler(providers, env):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
-      %(prog)s [-p <port>] [-g <group> -i <if0> [-i <if1> ..]] [-d <dir>]""")
+      %(prog)s [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>]""")
     parser.add_argument('-p', dest='port',
                         default=1001, type=int, metavar='<port>',
                         help='port number to listen on (default 1001)')
@@ -71,9 +71,13 @@ if __name__ == "__main__":
     )
 
     if args.mcast_ifaces:
-        group_bin = socket.inet_pton(socket.AF_INET6, args.group)
+        mcast_ifaces = { ifname: group for ifname, group, *_
+                        in [ reversed([ args.group ] + ifspec.split('%')) for ifspec
+                         in args.mcast_ifaces ] }
+
         for (inf_id, inf_name) in socket.if_nameindex():
-            if inf_name in args.mcast_ifaces:
+            if inf_name in mcast_ifaces:
+                group_bin = socket.inet_pton(socket.AF_INET6, mcast_ifaces[inf_name])
                 mreq = group_bin + struct.pack('@I', inf_id)
                 server.socket.setsockopt(
                     socket.IPPROTO_IPV6,
