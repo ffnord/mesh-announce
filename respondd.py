@@ -69,6 +69,7 @@ if __name__ == "__main__":
         ("", args.port),
         get_handler(get_providers(args.directory), {'batadv_dev': args.batadv_iface, 'mesh_ipv4': args.mesh_ipv4})
     )
+    server.daemon_threads = True
 
     if args.mcast_ifaces:
         mcast_ifaces = { ifname: group for ifname, group, *_
