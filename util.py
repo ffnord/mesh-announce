@@ -26,3 +26,27 @@ def find_modules(base, *path):
         path_files.append((lpath, files))
     return path_files
 
+def ifindex_to_iface(if_index):
+    ifaces = next(os.walk('/sys/class/net'))[1]
+    for iface in ifaces:
+        index = open('/sys/class/net/' + iface + '/ifindex').read()
+        if int(index) == if_index:
+            return iface
+    return None
+
+def iface_match_recursive(iface, candidates):
+    for ciface in candidates:
+      if ciface == iface:
+        return iface
+      if os.path.exists('/sys/class/net/' + ciface + '/master'):
+        master = os.path.basename(os.readlink('/sys/class/net/' + ciface + '/master'))
+        res = iface_match_recursive(iface, [ master ])
+        if res != None:
+          return ciface;
+    return None
+
+def ifindex_to_batiface(if_index, batman_ifaces):
+    iface = ifindex_to_iface(if_index)
+    if iface in batman_ifaces or iface == None:
+        return iface
+    return iface_match_recursive(iface, batman_ifaces)
