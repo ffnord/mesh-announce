@@ -64,7 +64,7 @@ Those are all available options (`respondd --help`):
 
 ```
       respondd.py -h
-      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface> ..]
+      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] ..]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -106,6 +106,11 @@ gateway can then be selected by the known macadress. The ip4 is stored in
 Configuration for a multi-domain site (domains 'one', 'two' and 'three') might look like this:
 
     `respondd.py -d /opt/mesh-announce/providers -i meshvpn-one -i br-one -i bat-one -b bat-one -i meshvpn-two -i br-two -i bat-two -b bat-two -i meshvpn-three -i br-three -i bat-three -b bat-three`
+
+In a more complex configuration involving the distributed DHCP deamon ddhcpd you might want to advertise different ipv4 gateways depending on the domain the query came from.
+This can be realized by adding gateway address overrides to the corresponding batman interfaces:
+
+    `respondd.py -d /opt/mesh-announce/providers -i meshvpn-one -i br-one -i bat-one -b bat-one:10.42.1.1 -i meshvpn-two -i br-two -i bat-two -b bat-two:10.42.2.1 -i meshvpn-three -i br-three -i bat-three -b bat-three:10.42.3.1`
 
 
 ### Debugging
