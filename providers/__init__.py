@@ -48,7 +48,7 @@ class SourceCache():
             self.expiry = time.monotonic() + ttl
 
         def isvalid(self):
-            return time.time() < self.expiry
+            return time.monotonic() < self.expiry
 
     instance = None
 
