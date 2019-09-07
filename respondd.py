@@ -12,7 +12,7 @@ from zlib import compress
 from providers import get_providers
 import util
 
-def get_handler(providers, batadv_ifaces, env):
+def get_handler(providers, batadv_ifaces, batadv_mesh_ipv4_overrides, env):
     class ResponddUDPHandler(socketserver.BaseRequestHandler):
         def multi_request(self, providernames, local_env):
             ret = {}
@@ -36,6 +36,8 @@ def get_handler(providers, batadv_ifaces, env):
 
             local_env = dict(env)
             local_env['batadv_dev'] = batadv_dev
+            if batadv_dev in batadv_mesh_ipv4_overrides:
+                local_env['mesh_ipv4'] = batadv_mesh_ipv4_overrides[batadv_dev]
 
             if data.startswith("GET "):
                 response = self.multi_request(data.split(" ")[1:], local_env)
@@ -52,7 +54,7 @@ def get_handler(providers, batadv_ifaces, env):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
-      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface> ..]""")
+      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] ..]""")
     parser.add_argument('-p', dest='port',
                         default=1001, type=int, metavar='<port>',
                         help='port number to listen on (default 1001)')
@@ -76,11 +78,19 @@ if __name__ == "__main__":
                         help='mesh ipv4 address')
     args = parser.parse_args()
 
+    batadv_mesh_ipv4_overrides = { }
+    batadv_ifaces = [ ]
+    for ifspec in args.batadv_ifaces:
+        iface, *mesh_ipv4 = ifspec.split(':')
+        batadv_ifaces.append(iface)
+        if mesh_ipv4:
+            batadv_mesh_ipv4_overrides[iface] = mesh_ipv4[0]
+
     metasocketserver.MetadataUDPServer.address_family = socket.AF_INET6
     metasocketserver.MetadataUDPServer.allow_reuse_address = True
     server = metasocketserver.MetadataUDPServer(
         ("", args.port),
-        get_handler(get_providers(args.directory), args.batadv_ifaces, {'mesh_ipv4': args.mesh_ipv4})
+        get_handler(get_providers(args.directory), batadv_ifaces, batadv_mesh_ipv4_overrides, {'mesh_ipv4': args.mesh_ipv4})
     )
     server.daemon_threads = True
 
