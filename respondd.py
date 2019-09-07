@@ -65,6 +65,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     socketserver.ThreadingUDPServer.address_family = socket.AF_INET6
+    socketserver.ThreadingUDPServer.allow_reuse_address = True
     server = socketserver.ThreadingUDPServer(
         ("", args.port),
         get_handler(get_providers(args.directory), {'batadv_dev': args.batadv_iface, 'mesh_ipv4': args.mesh_ipv4})
