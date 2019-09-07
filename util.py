@@ -35,14 +35,21 @@ def ifindex_to_iface(if_index):
     return None
 
 def iface_match_recursive(iface, candidates):
-    for ciface in candidates:
-      if ciface == iface:
-        return iface
-      if os.path.exists('/sys/class/net/' + ciface + '/master'):
-        master = os.path.basename(os.readlink('/sys/class/net/' + ciface + '/master'))
-        res = iface_match_recursive(iface, [ master ])
+    if os.path.exists('/sys/class/net/' + iface + '/master'):
+        master = os.path.basename(os.readlink('/sys/class/net/' + iface + '/master'))
+        res = iface_match_recursive(master, candidates)
         if res != None:
-          return ciface;
+            return res
+
+    for ciface in candidates:
+        if ciface == iface:
+            return iface
+        if os.path.exists('/sys/class/net/' + ciface + '/master'):
+            master = os.path.basename(os.readlink('/sys/class/net/' + ciface + '/master'))
+            res = iface_match_recursive(iface, [ master ])
+            if res != None:
+                return ciface
+
     return None
 
 def ifindex_to_batiface(if_index, batman_ifaces):
