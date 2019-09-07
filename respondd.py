@@ -58,7 +58,7 @@ if __name__ == "__main__":
                         help='port number to listen on (default 1001)')
     parser.add_argument('-g', dest='link_group',
                         default='ff02::2:1001', metavar='<link local group>',
-                        help='link-local multicast group (default ff02::2:1001)')
+                        help='link-local multicast group (default ff02::2:1001), set to emtpy string to disable')
     parser.add_argument('-s', dest='site_group',
                         default='ff05::2:1001', metavar='<site local group>',
                         help='site-local multicast group (default ff05::2:1001), set to empty string to disable')
@@ -93,14 +93,17 @@ if __name__ == "__main__":
             mreq
         )
 
-    mcast_ifaces = { ifname: group for ifname, group, *_
-                    in [ reversed([ args.link_group ] + ifspec.split('%')) for ifspec
-                     in args.mcast_ifaces ] }
+    mcast_iface_groups = { }
+    for ifspec in args.mcast_ifaces:
+        iface, *groups = reversed(ifspec.split('%'))
+        if not iface in mcast_iface_groups:
+            mcast_iface_groups[iface] = [ group for group in [ args.link_group, args.site_group ] if len(group) > 0 ]
+        mcast_iface_groups[iface] += groups
 
     for (if_index, if_name) in socket.if_nameindex():
-        if if_name in mcast_ifaces:
-            join_group(mcast_ifaces[if_name], if_index)
-            if len(args.site_group) > 0:
-                join_group(args.site_group, if_index)
+        if if_name in mcast_iface_groups:
+            groups = mcast_iface_groups[if_name]
+            for group in groups:
+                join_group(group, if_index)
 
     server.serve_forever()
