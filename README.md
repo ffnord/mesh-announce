@@ -62,11 +62,30 @@ ratelimit it on the allowed interfaces for the same reason.
 
 Those are all available options (`respondd --help`):
 
-    respondd.py [-p <port>] [-g <group> -i <if0> [-i <if1> ..]] [-d <dir>]
+```
+      respondd.py -h
+      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface> ..]
 
-for example:
+optional arguments:
+  -h, --help            show this help message and exit
+  -p <port>             port number to listen on (default 1001)
+  -g <link local group>
+                        link-local multicast group (default ff02::2:1001), set
+                        to emtpy string to disable
+  -s <site local group>
+                        site-local multicast group (default ff05::2:1001), set
+                        to empty string to disable
+  -i <iface>            listening interface (default bat0), may be specified
+                        multiple times
+  -d <dir>              data provider directory (default: $PWD/providers)
+  -b <iface>            batman-adv interface to answer for (default: bat0).
+                        Specify once per domain
+  -m <mesh_ipv4>        mesh ipv4 address
+```
 
-    respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address>
+This is a possible configuration for a site with a single domain:
+
+    `respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address>`
 
  * `<your-clientbridge-if>`: interfacename of mesh-bridge (for example br-ffXX)
  * `<your-mesh-vpn-if>`: interfacename of fastd or tuneldigger (for example ffXX-mvpn)
@@ -78,11 +97,16 @@ The ipv4 address can be requested for example by
 [ddhcpd](https://github.com/TobleMiner/gluon-sargon/blob/feature-respondd-gateway-update/ddhcpd/files/usr/sbin/ddhcpd-gateway-update#L3)
 via
 
-    gluon-neighbour-info -p 1001 -d ff02::1 -i bat0 -r gateway
+    `gluon-neighbour-info -p 1001 -d ff02::1 -i bat0 -r gateway`
     
 This will request all json objects for all gateways. The json object for the
 gateway can then be selected by the known macadress. The ip4 is stored in
 `node_id.address.ipv4`.
+
+Configuration for a multi-domain site (domains 'one', 'two' and 'three') might look like this:
+
+    `respondd.py -d /opt/mesh-announce/providers -i meshvpn-one -i br-one -i bat-one -b bat-one -i meshvpn-two -i br-two -i bat-two -b bat-two -i meshvpn-three -i br-three -i bat-three -b bat-three`
+
 
 ### Debugging
 
