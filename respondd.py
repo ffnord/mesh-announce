@@ -52,7 +52,7 @@ def get_handler(providers, batadv_ifaces, env):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
-      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>""")
+      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface> ..]""")
     parser.add_argument('-p', dest='port',
                         default=1001, type=int, metavar='<port>',
                         help='port number to listen on (default 1001)')
