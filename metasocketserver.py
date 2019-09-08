@@ -9,7 +9,6 @@ class in6_addr_U(ctypes.Union):
         ('__u6_addr32', ctypes.c_uint32 * 4),
     ]
 
-
 class in6_addr(ctypes.Structure):
     _fields_ = [
         ('__in6_u', in6_addr_U),
@@ -21,9 +20,16 @@ class in6_pktinfo(ctypes.Structure):
         ('ipi6_ifindex', ctypes.c_uint),
     ]
 
+
 class MetadataUDPServer(ThreadingUDPServer):
+    """Extension of ThreadingUDPServer.
+       Provides the ifindex of the interface on which
+       a message was received in addition to message data
+       and source address. IPv6 only
+    """
     def __init__(self, *args, **kwargs):
         super(MetadataUDPServer, self).__init__(*args, **kwargs)
+        # Enable IPV6_PKTINFO ancilliary data
         self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_RECVPKTINFO, 1)
 
     def get_request(self):
@@ -31,8 +37,11 @@ class MetadataUDPServer(ThreadingUDPServer):
         ifindex = None
         for anc_record in anc_data:
             (anc_level, anc_type, anc_datum) = anc_record
+            # Check for IPV6_PKTINFO ancilliary data
             if anc_level == socket.IPPROTO_IPV6 and anc_type == socket.IPV6_PKTINFO:
+                # Parse binary ancilliary data
                 pktinfo = in6_pktinfo.from_buffer_copy(anc_datum)
                 ifindex = pktinfo.ipi6_ifindex
+
         return (data, self.socket, ifindex), client_addr
 
