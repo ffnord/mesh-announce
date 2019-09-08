@@ -30,10 +30,12 @@ def get_handler(providers, batadv_ifaces, batadv_mesh_ipv4_overrides, env):
             ifindex = self.request[2]
             response = None
 
+            # Find batman interface the query belongs to
             batadv_dev = util.ifindex_to_batiface(ifindex, batadv_ifaces)
             if batadv_dev == None:
                 return
 
+            # Clone global environment and populate with interface-specific data
             local_env = dict(env)
             local_env['batadv_dev'] = batadv_dev
             if batadv_dev in batadv_mesh_ipv4_overrides:
@@ -78,12 +80,14 @@ if __name__ == "__main__":
                         help='mesh ipv4 address')
     args = parser.parse_args()
 
+    # Extract batman interfaces from commandline parameters
     batadv_mesh_ipv4_overrides = { }
     batadv_ifaces = [ ]
     for ifspec in args.batadv_ifaces:
         iface, *mesh_ipv4 = ifspec.split(':')
         batadv_ifaces.append(iface)
         if mesh_ipv4:
+            # mesh_ipv4 list is not empty, there is an override address
             batadv_mesh_ipv4_overrides[iface] = mesh_ipv4[0]
 
     metasocketserver.MetadataUDPServer.address_family = socket.AF_INET6
@@ -103,16 +107,21 @@ if __name__ == "__main__":
             mreq
         )
 
+    # Extract multicast interfaces from commandline parameters
     mcast_iface_groups = { }
     for ifspec in args.mcast_ifaces:
         iface, *groups = reversed(ifspec.split('%'))
+        # Populate with default link and site mcast groups if entry not yet created
         if not iface in mcast_iface_groups:
             mcast_iface_groups[iface] = [ group for group in [ args.link_group, args.site_group ] if len(group) > 0 ]
+        # Append group specified on commndline
         mcast_iface_groups[iface] += groups
 
     for (if_index, if_name) in socket.if_nameindex():
+        # Check if daemon should listen on interface
         if if_name in mcast_iface_groups:
             groups = mcast_iface_groups[if_name]
+            # Join all multicast groups specified for this interface
             for group in groups:
                 join_group(group, if_index)
 
