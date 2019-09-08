@@ -34,16 +34,26 @@ def ifindex_to_iface(if_index):
             return iface
     return None
 
+
 def iface_match_recursive(iface, candidates):
+    """Check if iface has any connection with an interface from candidates
+       through master/slave relationship and return the name of the first
+       interface found to have a master/slave relation with it or None if
+       there is no relation with any of the interfaces
+    """
+    # Search up the interface tree, check master of iface
     if os.path.exists('/sys/class/net/' + iface + '/master'):
         master = os.path.basename(os.readlink('/sys/class/net/' + iface + '/master'))
         res = iface_match_recursive(master, candidates)
         if res != None:
             return res
 
+    # Search down the interface tree
     for ciface in candidates:
+        # Check current interface
         if ciface == iface:
             return iface
+        # Check master of every candidate interface
         if os.path.exists('/sys/class/net/' + ciface + '/master'):
             master = os.path.basename(os.readlink('/sys/class/net/' + ciface + '/master'))
             res = iface_match_recursive(iface, [ master ])
@@ -53,6 +63,11 @@ def iface_match_recursive(iface, candidates):
     return None
 
 def ifindex_to_batiface(if_index, batman_ifaces):
+    """Check if the interace with interface index if_index is connected to a
+       batman interface in batman_ifaces and return the name of the batman
+       interface it is connected with or None if it is not connected to any
+       of the specified interfaces
+    """
     iface = ifindex_to_iface(if_index)
     if iface in batman_ifaces or iface == None:
         return iface
