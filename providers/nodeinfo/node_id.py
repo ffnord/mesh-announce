@@ -6,4 +6,7 @@ class Source(providers.DataSource):
         return ['batadv_dev']
 
     def call(self, batadv_dev):
-        return open('/sys/class/net/' + batadv_dev + '/address').read().strip().replace(':', '')
+        try:
+            return open('/etc/machine-id').read().strip()[:12]
+        except:
+            return open('/sys/class/net/' + batadv_dev + '/address').read().strip().replace(':', '')
