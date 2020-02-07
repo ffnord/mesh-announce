@@ -8,14 +8,14 @@ class Source(providers.DataSource):
         return ['batadv_dev']
 
     def call(self, batadv_dev):
-        lines = call(['batctl', '-m', batadv_dev, 'o'])
+        lines = call(['batctl', '-m', batadv_dev, 'o', '-nH'])
         neighbours = {}
         prefix_lower = '/sys/class/net/{}/lower_'.format(batadv_dev)
         for dev in glob(prefix_lower + '*'):
             ifname = dev[len(prefix_lower):]
             mac = open(dev + '/address').read().strip()
             ifneighbours = {}
-            for line in lines[2:]:
+            for line in lines:
                 for s in ['(', ')', '[', ']:', ']', '*']:
                     line = line.replace(s, '')
                 fields = line.split()
