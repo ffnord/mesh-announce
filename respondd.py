@@ -38,6 +38,7 @@ def get_handler(providers, batadv_ifaces, batadv_mesh_ipv4_overrides, env):
             # Clone global environment and populate with interface-specific data
             local_env = dict(env)
             local_env['batadv_dev'] = batadv_dev
+            local_env['domain_code'] = domain_code
             if batadv_dev in batadv_mesh_ipv4_overrides:
                 local_env['mesh_ipv4'] = batadv_mesh_ipv4_overrides[batadv_dev]
 
@@ -78,6 +79,9 @@ if __name__ == "__main__":
     parser.add_argument('-m', dest='mesh_ipv4',
                         metavar='<mesh_ipv4>',
                         help='mesh ipv4 address')
+    parser.add_argument('-n', dest='domain_code',
+                        metavar='domain_code',
+                        help='Domain Code for system/domain_code')
     args = parser.parse_args()
 
     # Extract batman interfaces from commandline parameters
@@ -89,6 +93,8 @@ if __name__ == "__main__":
         if mesh_ipv4:
             # mesh_ipv4 list is not empty, there is an override address
             batadv_mesh_ipv4_overrides[iface] = mesh_ipv4[0]
+
+    domain_code = args.domain_code
 
     metasocketserver.MetadataUDPServer.address_family = socket.AF_INET6
     metasocketserver.MetadataUDPServer.allow_reuse_address = True
