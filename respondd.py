@@ -56,7 +56,7 @@ def get_handler(providers, batadv_ifaces, batadv_mesh_ipv4_overrides, env):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
-      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] ..]""")
+      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] [-n <domain code>] ..]""")
     parser.add_argument('-p', dest='port',
                         default=1001, type=int, metavar='<port>',
                         help='port number to listen on (default 1001)')
@@ -78,6 +78,9 @@ if __name__ == "__main__":
     parser.add_argument('-m', dest='mesh_ipv4',
                         metavar='<mesh_ipv4>',
                         help='mesh ipv4 address')
+    parser.add_argument('-n', default='default', dest='domain_code', metavar='<domain code>',
+                        help='Domain Code for system/domain_code')
+
     args = parser.parse_args()
 
     # Extract batman interfaces from commandline parameters
@@ -90,11 +93,13 @@ if __name__ == "__main__":
             # mesh_ipv4 list is not empty, there is an override address
             batadv_mesh_ipv4_overrides[iface] = mesh_ipv4[0]
 
+    global_handler_env = { 'domain_code': args.domain_code, 'mesh_ipv4': args.mesh_ipv4 }
+
     metasocketserver.MetadataUDPServer.address_family = socket.AF_INET6
     metasocketserver.MetadataUDPServer.allow_reuse_address = True
     server = metasocketserver.MetadataUDPServer(
         ("", args.port),
-        get_handler(get_providers(args.directory), batadv_ifaces, batadv_mesh_ipv4_overrides, {'mesh_ipv4': args.mesh_ipv4})
+        get_handler(get_providers(args.directory), batadv_ifaces, batadv_mesh_ipv4_overrides, global_handler_env)
     )
     server.daemon_threads = True
 
