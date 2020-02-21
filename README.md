@@ -24,7 +24,6 @@ information needed for example to display the name of the server on node-maps.
     systemctl start respondd
     systemctl status respondd
 
-     
 ## Upgrade
 
     cp /opt/mesh-announce/respondd.service /etc/systemd/system/
@@ -64,7 +63,7 @@ Those are all available options (`respondd --help`):
 
 ```
       respondd.py -h
-      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] ..]
+      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] [-n <domain code>] ..]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -81,18 +80,20 @@ optional arguments:
   -b <iface>            batman-adv interface to answer for (default: bat0).
                         Specify once per domain
   -m <mesh_ipv4>        mesh ipv4 address
-```
+  -n <domain code>      Gateway domain_code for nodeinfo/system/domain_code
+
 
 This is a possible configuration for a site with a single domain:
 
-    `respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address>`
+    `respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address> -n <domain code>`
 
  * `<your-clientbridge-if>`: interfacename of mesh-bridge (for example br-ffXX)
  * `<your-mesh-vpn-if>`: interfacename of fastd or tuneldigger (for example ffXX-mvpn)
  * `<your-batman-if>`: B.A.T.M.A.N interfacename (usually bat-ffXX)
  * `<mesh ipv4 address>`: The ipv4 address of this gateway (usually the ip on interface `<your-clientbridge-if>`)  
     you can get the ip with `ip a s dev br-ffXX|grep inet|head -n1|cut -d" " -f 6|sed 's|/.*||g'`
-    
+ * `<domain code>`: The internal domain_code, identical with the gluon domain_name
+
 The ipv4 address can be requested for example by
 [ddhcpd](https://github.com/TobleMiner/gluon-sargon/blob/feature-respondd-gateway-update/ddhcpd/files/usr/sbin/ddhcpd-gateway-update#L3)
 via
