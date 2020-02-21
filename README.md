@@ -24,7 +24,7 @@ information needed for example to display the name of the server on node-maps.
     systemctl start respondd
     systemctl status respondd
 
-     
+
 ## Upgrade
 
     cp /opt/mesh-announce/respondd.service /etc/systemd/system/
@@ -81,6 +81,7 @@ optional arguments:
   -b <iface>            batman-adv interface to answer for (default: bat0).
                         Specify once per domain
   -m <mesh_ipv4>        mesh ipv4 address
+  -n <domain_code>      Gateway domain_code for nodeinfo/system/domain_code
 ```
 
 This is a possible configuration for a site with a single domain:
@@ -92,7 +93,8 @@ This is a possible configuration for a site with a single domain:
  * `<your-batman-if>`: B.A.T.M.A.N interfacename (usually bat-ffXX)
  * `<mesh ipv4 address>`: The ipv4 address of this gateway (usually the ip on interface `<your-clientbridge-if>`)  
     you can get the ip with `ip a s dev br-ffXX|grep inet|head -n1|cut -d" " -f 6|sed 's|/.*||g'`
-    
+ * `<domain_code>`: The internal domain_code, identical with the gluon domain_name
+
 The ipv4 address can be requested for example by
 [ddhcpd](https://github.com/TobleMiner/gluon-sargon/blob/feature-respondd-gateway-update/ddhcpd/files/usr/sbin/ddhcpd-gateway-update#L3)
 via
