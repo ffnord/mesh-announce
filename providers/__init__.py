@@ -3,6 +3,7 @@ import time
 import traceback
 from util import source_dirs, find_modules
 from importlib import import_module
+from functools import reduce
 
 class DataSource():
     ''' Base data source, inherited by sources in provider directories
@@ -23,6 +24,11 @@ class DataSource():
         '''
         raise NotImplementedError()
 
+    def is_enabled(self, env):
+        ''' Override when special preconditions for calling exist
+        '''
+        has_args = map(lambda arg: arg in env and env[arg] != None, self.required_args())
+        return reduce(bool.__and__, has_args, True)
 
 
 def _set_value(node, path, value):
@@ -110,6 +116,9 @@ class Source():
 
         return result
 
+    def is_enabled(self, env):
+        return self.source.is_enabled(env)
+
 class Provider():
     @classmethod
     def from_directory(cls, basepath, dirname):
@@ -136,7 +145,8 @@ class Provider():
 
         for source in self.sources:
             try:
-                _set_value(ret, source.path, source.call(env))
+                if source.is_enabled(env):
+                    _set_value(ret, source.path, source.call(env))
             except:
                 traceback.print_exc()
 
