@@ -1,0 +1,18 @@
+{
+	"bat0": "dom0-gw",
+	"bat10": "dom10-gw",
+	"bat11": "dom11-gw",
+	"bat12": "dom12-gw",
+	"bat13": "dom13-gw",
+	"bat14": "dom14-gw",
+	"bat15": "dom15-gw",
+	"bat16": "dom16-gw",
+	"bat17": "dom17-gw",
+	"bat18": "dom18-gw",
+	"bat19": "dom19-gw",
+	"bat20": "dom20-gw",
+	"bat21": "dom21-gw",
+	"bat22": "dom22-gw",
+	"bat23": "dom23-gw",
+	"bat99": "dom99-gw"
+}
