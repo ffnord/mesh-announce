@@ -82,4 +82,4 @@ def read_domainfile(dcf_path):
     if dcf_path is None:
         return {}
     with open(dcf_path, "r") as dc_file:
-        retorn json.load(dc_file)
+        return json.load(dc_file)
