@@ -83,4 +83,4 @@ def read_domainfile(dcf_path):
         return {}
     with open(dcf_path, "r") as dc_file:
         known = json.load(dc_file)
-        return known
+        retorn json.load(dc_file)
