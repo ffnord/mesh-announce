@@ -80,7 +80,10 @@ optional arguments:
   -b <iface>            batman-adv interface to answer for (default: bat0).
                         Specify once per domain
   -m <mesh_ipv4>        mesh ipv4 address
-  -n <domain code>      Gateway domain_code for nodeinfo/system/domain_code
+  -n <domain code>      (default) domain code for system/domain_code
+  -c <domain code_file>
+                        domain_code.json path (if info is not in file,
+                        fallback to -n's value)
 
 
 This is a possible configuration for a site with a single domain:
