@@ -1,18 +1,20 @@
 {
-	"bat0": "dom0",
-	"bat10": "dom10",
-	"bat11": "dom11",
-	"bat12": "dom12",
-	"bat13": "dom13",
-	"bat14": "dom14",
-	"bat15": "dom15",
-	"bat16": "dom16",
-	"bat17": "dom17",
-	"bat18": "dom18",
-	"bat19": "dom19",
-	"bat20": "dom20",
-	"bat21": "dom21",
-	"bat22": "dom22",
-	"bat23": "dom23",
-	"bat99": "dom99"
+    "domaincodes": {
+        "bat0": "dom0",
+        "bat10": "dom10",
+        "bat11": "dom11",
+        "bat12": "dom12",
+        "bat13": "dom13",
+        "bat14": "dom14",
+        "bat15": "dom15",
+        "bat16": "dom16",
+        "bat17": "dom17",
+        "bat18": "dom18",
+        "bat19": "dom19",
+        "bat20": "dom20",
+        "bat21": "dom21",
+        "bat22": "dom22",
+        "bat23": "dom23",
+        "bat99": "dom99"
+    }
 }
