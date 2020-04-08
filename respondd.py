@@ -56,7 +56,7 @@ def get_handler(providers, batadv_ifaces, batadv_mesh_ipv4_overrides, env):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
       %(prog)s -h
-      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] [-n <domain code>] [-c <domain_code_file>] ..]""")
+      %(prog)s [-p <port>] [-g <group>] [-i [<group>%%]<if0>] [-i [<group>%%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>][:<domain code>] [-n <domain code>] [-c <domain_code_file>] ..]""")
     parser.add_argument('-p', dest='port',
                         default=1001, type=int, metavar='<port>',
                         help='port number to listen on (default 1001)')
