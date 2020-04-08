@@ -103,16 +103,17 @@ class Source():
 
     def call(self, env):
         cache = SourceCache.getinstance()
-        cache_result = cache.get(self)
-        if cache_result:
-            return cache_result
 
         args = []
         for argname in self.source.required_args():
             args.append(env[argname])
 
+        cache_result = cache.get(frozenset([self] + args))
+        if cache_result:
+            return cache_result
+
         result = self.source.call(*args)
-        cache.put(self, result, self.source.cache_ttl())
+        cache.put(frozenset([self] + args), result, self.source.cache_ttl())
 
         return result
 
