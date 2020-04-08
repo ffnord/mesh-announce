@@ -85,17 +85,26 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Read domain-codes from file
+    known_codes = util.read_domainfile(args.domain_code_file)
+
     # Extract batman interfaces from commandline parameters
+    # and overwrite domain-codes from file with commandline arguments
     batadv_mesh_ipv4_overrides = { }
     batadv_ifaces = [ ]
     for ifspec in args.batadv_ifaces:
-        iface, *mesh_ipv4 = ifspec.split(':')
+        iface, *left_over = ifspec.split(':')
         batadv_ifaces.append(iface)
-        if mesh_ipv4:
-            # mesh_ipv4 list is not empty, there is an override address
-            batadv_mesh_ipv4_overrides[iface] = mesh_ipv4[0]
-
-    known_codes = util.read_domainfile(args.domain_code_file)
+        try:
+            # if left_over list is not empty, there is at least an override address
+            possible_override = left_over.pop(0)
+            # this clause is necessary in case one does not specify an ipv4 override, but a domain-code
+            if '' != possible_override:
+                batadv_mesh_ipv4_overrides[iface] = possible_override
+            # if left_over list is not empty, there is a domain_code
+            known_codes[iface] = left_over.pop(0)
+        except IndexError:
+            continue
 
     global_handler_env = { 'domain_code': args.domain_code, 'known_codes': known_codes, 'mesh_ipv4': args.mesh_ipv4 }
 
