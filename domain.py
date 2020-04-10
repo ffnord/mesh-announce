@@ -24,11 +24,11 @@ class Domain():
 class BatadvDomain(Domain):
     def __init__(self, domconfig):
         self.batman_iface = domconfig.batman_iface
-        self.vpn_iface = domconfig.vpn_iface
+        self.interfaces = domconfig.interfaces
         super().__init__(domconfig.mcast_link, domconfig.mcast_site, domconfig.ipv4_gateway)
 
     def get_interfaces(self):
-        return [self.batman_iface, self.vpn_iface]
+        return [self.batman_iface] + self.interfaces
 
     def get_batman_interface(self):
         return self.batman_iface

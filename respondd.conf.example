@@ -16,7 +16,7 @@ DefaultDomainType: batadv
 DomainType: batadv
 # Batman interface
 BatmanInterface: bat-ffki
-# VPN interface
-VPNInterface: mvpn-ffki
+# Other listen interfaces
+Interfaces: mvpn-ffki
 # IPv4 gateway option for ddhcpd
 IPv4Gateway: 10.116.128.8
