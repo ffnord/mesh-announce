@@ -19,10 +19,10 @@ class DomainOptions():
 
     def __init__(self, name, parser, globals):
         self.name = name
-        self.vpn_iface = parser.get(name, 'VPNInterface', fallback='mvpn-' + name)
+        self.interfaces = list(map(str.strip, parser.get(name, 'Interfaces', fallback='').split(',')))
         self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback=globals.mcast_link)
         self.mcast_site = parser.get(name, 'MulticastSiteAddress', fallback=globals.mcast_site)
-        self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=globals.ipv4_gateway),
+        self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=globals.ipv4_gateway)
 
 class BatmanDomainOptions(DomainOptions):
     def __init__(self, name, parser, globals):
