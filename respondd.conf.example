@@ -1,0 +1,22 @@
+# Default settings
+[Defaults]
+# Listen port
+Port: 1001
+# Default multicast listen addresses
+MulticastLinkAddress: ff02::2:1001
+MulticastSiteAddress: ff05::2:1001
+# Default domain to use
+DefaultDomain: ffki
+# Default domain type
+DefaultDomainType: batadv
+
+# A domain
+[ffki]
+# This is a batman domain
+DomainType: batadv
+# Batman interface
+BatmanInterface: bat-ffki
+# VPN interface
+VPNInterface: mvpn-ffki
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: 10.116.128.8
