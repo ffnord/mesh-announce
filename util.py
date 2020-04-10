@@ -35,7 +35,6 @@ def ifindex_to_iface(if_index):
             return iface
     return None
 
-
 def iface_match_recursive(iface, candidates):
     """Check if iface has any connection with an interface from candidates
        through master/slave relationship and return the name of the first
@@ -73,17 +72,3 @@ def ifindex_to_batiface(if_index, batman_ifaces):
     if iface in batman_ifaces or iface == None:
         return iface
     return iface_match_recursive(iface, batman_ifaces)
-
-def read_domainfile(dcf_path):
-    """Read a json file which holds all currently known assignments of
-       bat interfaces to domains as a dictionary within a dict and below its key 'domaincodes'
-       and return it as python dict.
-       Return an empty dict, if the given path was None.
-    """
-    if dcf_path is None:
-        return {}
-    with open(dcf_path, "r") as dc_file:
-        try:
-            return json.load(dc_file)["domaincodes"]
-        except KeyError:
-            return {}
