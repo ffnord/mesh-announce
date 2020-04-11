@@ -1,22 +1,40 @@
 # Default settings
 [Defaults]
 # Listen port
+# optional, default: 1001
 Port: 1001
-# Default multicast listen addresses
+# Default link local listen addresses
+# optional, default: ff02::2:1001
 MulticastLinkAddress: ff02::2:1001
+# Default site local listen addresses
+# optional, default: ff05::2:1001
 MulticastSiteAddress: ff05::2:1001
 # Default domain to use
+# optional, if specified incoming requests that can not be mapped to a domain
+# are mapped to this domain
 DefaultDomain: ffki
 # Default domain type
+# optional
 DefaultDomainType: batadv
+# Default ddhcpd IPv4 gateway address
+# optional
+IPv4Gateway: 10.116.128.8
 
 # A domain
+# User your own domain name here
 [ffki]
 # This is a batman domain
+# optional, mandatory if DefaultDomainType not set, default: @DefaultDomainType
+# supported domain types are: simple, batadv
 DomainType: batadv
 # Batman interface
+# only for batadv domains, mandatory for batadv domains
 BatmanInterface: bat-ffki
 # Other listen interfaces
+# optional, specify listen/multicast interfaces for this domain here
 Interfaces: mvpn-ffki
 # IPv4 gateway option for ddhcpd
+# optional, default: @IPv4Gateway
 IPv4Gateway: 10.116.128.8
+
+# An arbitrary number of further domains may follow here
