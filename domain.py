@@ -1,4 +1,4 @@
-from config import BatmanDomainOptions
+from config import BatmanDomainOptions, DomainOptions
 
 class Domain():
     ''' Abstract container object for a freifunk domain
