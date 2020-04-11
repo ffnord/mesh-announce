@@ -33,6 +33,9 @@ information needed for example to display the name of the server on node-maps.
     systemctl restart respondd
     systemctl status respondd
 
+Note that you might need to transition from the old, commandline argument based config method to
+the new config file based method when upgrading from an older version
+
 ### Alfred
 
 Open the Alfred port UDP 16962 in your firewall. Add _announce.sh_ to your
@@ -62,33 +65,40 @@ ratelimit it on the allowed interfaces for the same reason.
 Those are all available options (`respondd --help`):
 
 ```
+usage: 
       respondd.py -h
-      respondd.py [-p <port>] [-g <group>] [-i [<group>%]<if0>] [-i [<group>%]<if1> ..] [-d <dir>] [-b <batman_iface>[:<mesh_ipv4>] [-n <domain code>] ..]
+      respondd.py [-f <configfile>] [-d <dir>]
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -p <port>             port number to listen on (default 1001)
-  -g <link local group>
-                        link-local multicast group (default ff02::2:1001), set
-                        to emtpy string to disable
-  -s <site local group>
-                        site-local multicast group (default ff05::2:1001), set
-                        to empty string to disable
-  -i <iface>            listening interface (default bat0), may be specified
-                        multiple times
-  -d <dir>              data provider directory (default: $PWD/providers)
-  -b <iface>            batman-adv interface to answer for (default: bat0).
-                        Specify once per domain
-  -m <mesh_ipv4>        mesh ipv4 address
-  -n <domain code>      (default) domain code for system/domain_code
-  -c <domain code_file>
-                        domain_code.json path (if info is not in file,
-                        fallback to -n's value)
+  -h, --help       show this help message and exit
+  -f <configfile>  config file to use (default: $PWD/respondd.conf)
+  -d <dir>         data provider directory (default: $PWD/providers)
 
+```
+Configuration is done via a ini-style config file. A possible config for a setup with a single batman domain in outlined in `respondd.conf.example`.
+The following is a more complete breakdown of the settings required:
+```
+# Default settings
+[Defaults]
+# Listen port, defaults to 1001
+Port: 1001
+# Default multicast listen addresses
+MulticastLinkAddress: ff02::2:1001
+MulticastSiteAddress: ff05::2:1001
+# Default domain to use
+DefaultDomain: <domain code>
+# Default domain type
+DefaultDomainType: batadv
 
-This is a possible configuration for a site with a single domain:
-
-    `respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address> -n <domain code>`
+# A domain
+[<domain code>]
+# Batman interface, mandatory
+BatmanInterface: <your-batman-if>
+# Other listen interfaces
+Interfaces: <your-clientbridge-if>, <your-mesh-vpn-if>
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: <mesh ipv4 address>
+```
 
  * `<your-clientbridge-if>`: interfacename of mesh-bridge (for example br-ffXX)
  * `<your-mesh-vpn-if>`: interfacename of fastd or tuneldigger (for example ffXX-mvpn)
@@ -97,25 +107,94 @@ This is a possible configuration for a site with a single domain:
     you can get the ip with `ip a s dev br-ffXX|grep inet|head -n1|cut -d" " -f 6|sed 's|/.*||g'`
  * `<domain code>`: The internal domain_code, identical with the gluon domain_name
 
-The ipv4 address can be requested for example by
+The <mesh ipv4 address> can be requested for example by
 [ddhcpd](https://github.com/TobleMiner/gluon-sargon/blob/feature-respondd-gateway-update/ddhcpd/files/usr/sbin/ddhcpd-gateway-update#L3)
 via
 
     `gluon-neighbour-info -p 1001 -d ff02::1 -i bat0 -r gateway`
     
 This will request all json objects for all gateways. The json object for the
-gateway can then be selected by the known macadress. The ip4 is stored in
+gateway can then be selected by the known macadress. The IPv4 address is stored in
 `node_id.address.ipv4`.
 
 Configuration for a multi-domain site (domains 'one', 'two' and 'three') might look like this:
 
-    `respondd.py -d /opt/mesh-announce/providers -i meshvpn-one -i br-one -i bat-one -b bat-one -i meshvpn-two -i br-two -i bat-two -b bat-two -i meshvpn-three -i br-three -i bat-three -b bat-three`
+```
+# Default settings
+[Defaults]
+# Listen port, defaults to 1001
+Port: 1001
+# Default multicast listen addresses
+MulticastLinkAddress: ff02::2:1001
+MulticastSiteAddress: ff05::2:1001
+# Default domain type
+DefaultDomainType: batadv
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: 10.42.0.1
+
+# First domain
+[one]
+# Batman interface, mandatory for batman domains
+BatmanInterface: bat-one
+# Other listen interfaces
+Interfaces: br-one, mvpn-one
+
+# Second domain
+[two]
+# Batman interface, mandatory for batman domains
+BatmanInterface: bat-two
+# Other listen interfaces
+Interfaces: br-two, mvpn-two
+
+# Third domain
+[three]
+# Batman interface, mandatory for datman domains
+BatmanInterface: bat-three
+# Other listen interfaces
+Interfaces: br-three, mvpn-three
+```
 
 In a more complex configuration involving the distributed DHCP deamon ddhcpd you might want to advertise different ipv4 gateways depending on the domain the query came from.
 This can be realized by adding gateway address overrides to the corresponding batman interfaces:
 
-    `respondd.py -d /opt/mesh-announce/providers -i meshvpn-one -i br-one -i bat-one -b bat-one:10.42.1.1 -i meshvpn-two -i br-two -i bat-two -b bat-two:10.42.2.1 -i meshvpn-three -i br-three -i bat-three -b bat-three:10.42.3.1`
+```
+# Default settings
+[Defaults]
+# Listen port, defaults to 1001
+Port: 1001
+# Default multicast listen addresses
+MulticastLinkAddress: ff02::2:1001
+MulticastSiteAddress: ff05::2:1001
+# Default domain type
+DefaultDomainType: batadv
 
+# First domain
+[one]
+# Batman interface, mandatory for batman domains
+BatmanInterface: bat-one
+# Other listen interfaces
+Interfaces: br-one, mvpn-one
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: 10.42.0.1
+
+# Second domain
+[two]
+# Batman interface, mandatory for batman domains
+BatmanInterface: bat-two
+# Other listen interfaces
+Interfaces: br-two, mvpn-two
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: 10.42.8.1
+
+# Third domain
+[three]
+# Batman interface, mandatory for datman domains
+BatmanInterface: bat-three
+# Other listen interfaces
+Interfaces: br-three, mvpn-three
+# IPv4 gateway option for ddhcpd
+IPv4Gateway: 10.42.16.1
+```
 
 ### Debugging
 
