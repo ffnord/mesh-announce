@@ -58,7 +58,7 @@ if __name__ == "__main__":
       %(prog)s [-f <configfile>] [-d <dir>]""")
     parser.add_argument('-f', dest='config',
                         default='./respondd.conf', metavar='<configfile>',
-                        help='config file to use')
+                        help='config file to use (default: $PWD/respondd.conf)')
     parser.add_argument('-d', dest='directory',
                         default='./providers', metavar='<dir>',
                         help='data provider directory (default: $PWD/providers)')
