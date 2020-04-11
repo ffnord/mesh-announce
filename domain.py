@@ -96,6 +96,7 @@ class DomainType():
 # Use only lower case keys, domain type from config is converted to lower
 # case during parsing
 domain_types = {
+    'simple': DomainType('simple', DomainOptions, Domain),
     'batadv': DomainType('batadv', BatmanDomainOptions, BatadvDomain),
 }
 
