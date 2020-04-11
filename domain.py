@@ -3,25 +3,23 @@ from config import BatmanDomainOptions
 class Domain():
     ''' Abstract container object for a freifunk domain
     '''
-    def __init__(self, mcast_link, mcast_site, ipv4_gateway):
-        self.mcast_link = mcast_link
-        self.mcast_site = mcast_site
-        self.ipv4_gateway = ipv4_gateway
+    def __init__(self, config):
+        self.config = config
 
     def get_ipv4_gateway(self):
-        return self.ipv4_gateway
+        return self.config.ipv4_gateway
 
     def get_multicast_address_link(self):
-        return self.mcast_link
+        return self.config.mcast_link
 
     def get_multicast_address_site(self):
-        return self.mcast_site
+        return self.config.mcast_site
 
     def get_interfaces(self):
         ''' Returns list off all interfaces respondd queries are
             expected to arrive on
         '''
-        return self.interfaces
+        return self.config.interfaces
 
     def get_provider_args(self):
         ''' Returns dict of parameters respondd queries are
@@ -32,16 +30,14 @@ class Domain():
 class BatadvDomain(Domain):
     ''' Container object for a batman freifunk domain
     '''
-    def __init__(self, domconfig):
-        self.batman_iface = domconfig.batman_iface
-        self.interfaces = domconfig.interfaces
-        super().__init__(domconfig.mcast_link, domconfig.mcast_site, domconfig.ipv4_gateway)
+    def __init__(self, config):
+        super().__init__(config)
 
     def get_interfaces(self):
-        return super().get_interfaces() + [self.batman_iface]
+        return super().get_interfaces() + [self.get_batman_interface()]
 
     def get_batman_interface(self):
-        return self.batman_iface
+        return self.config.batman_iface
 
     def get_provider_args(self):
         args = super().get_provider_args()

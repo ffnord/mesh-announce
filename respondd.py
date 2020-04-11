@@ -36,7 +36,10 @@ def get_handler(providers):
 
             domain = DomainRegistry.get_instance().get_domain_by_interface(iface)
             if not domain:
-                return
+                # Try default domain, ignore request if not configured
+                domain = DomainRegistry.get_instance().get_default_domain()
+                if not domain:
+                    return
 
             provider_env = domain.get_provider_args()
 
@@ -68,8 +71,10 @@ if __name__ == "__main__":
     config = Config.from_file(args.config)
     for domname in config.get_domain_names():
         domcfg = config.get_domain_config(domname)
-        DomainRegistry.get_instance().add_domain(domcfg.domain_type(domcfg))
-    DomainRegistry.get_instance().set_default_domain
+        domain = domcfg.domain_type(domcfg)
+        DomainRegistry.get_instance().add_domain(domain)
+        if domname == config.get_default_domain():
+            DomainRegistry.get_instance().set_default_domain(domain)
 
     metasocketserver.MetadataUDPServer.address_family = socket.AF_INET6
     metasocketserver.MetadataUDPServer.allow_reuse_address = True
