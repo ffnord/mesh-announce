@@ -60,7 +60,7 @@ and B.A.T.M.A.N. advanced interfaces. Please *don't* open the port globally, as
 it can be used for traffic amplification attacks. You also might want to
 ratelimit it on the allowed interfaces for the same reason.
 
-#### commandline options
+#### Commandline options
 
 Those are all available options (`respondd --help`):
 
@@ -75,6 +75,9 @@ optional arguments:
   -d <dir>         data provider directory (default: $PWD/providers)
 
 ```
+
+#### Configuration
+
 Configuration is done via a ini-style config file. A possible config for a setup with a single batman domain in outlined in `respondd.conf.example`.
 The following is a more complete breakdown of the settings required:
 ```
