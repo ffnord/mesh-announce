@@ -91,7 +91,7 @@ MulticastSiteAddress: ff05::2:1001
 # Default domain to use
 DefaultDomain: <domain code>
 # Default domain type
-DefaultDomainType: batadv
+DomainType: batadv
 
 # A domain
 [<domain code>]
@@ -131,7 +131,7 @@ Port: 1001
 MulticastLinkAddress: ff02::2:1001
 MulticastSiteAddress: ff05::2:1001
 # Default domain type
-DefaultDomainType: batadv
+DomainType: batadv
 # IPv4 gateway option for ddhcpd
 IPv4Gateway: 10.42.0.1
 
@@ -169,7 +169,7 @@ Port: 1001
 MulticastLinkAddress: ff02::2:1001
 MulticastSiteAddress: ff05::2:1001
 # Default domain type
-DefaultDomainType: batadv
+DomainType: batadv
 
 # First domain
 [one]
