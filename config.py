@@ -28,11 +28,14 @@ class DomainOptions():
     def __init__(self, name, parser, globals):
         ''' Initialize common options
         '''
+        from domain import Domain
+
         self.name = name
         self.interfaces = list(map(str.strip, parser.get(name, 'Interfaces', fallback='').split(',')))
         self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback=globals.mcast_link)
         self.mcast_site = parser.get(name, 'MulticastSiteAddress', fallback=globals.mcast_site)
         self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=globals.ipv4_gateway)
+        self.domain_type = Domain
 
 class BatmanDomainOptions(DomainOptions):
     ''' Container for batman specific options
@@ -78,7 +81,7 @@ class Config():
             parser.get(None, 'MulticastLinkAddress', fallback='ff02::2:1001'),
             parser.get(None, 'MulticastSiteAddress', fallback='ff05::2:1001'),
             parser.get(None, 'DefaultDomain', fallback=None),
-            parser.get(None, 'DefaultDomainType', fallback=None),
+            parser.get(None, 'DefaultDomainType', fallback='simple'),
             parser.get(None, 'IPv4Gateway', fallback=None),
         )
 
