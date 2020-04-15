@@ -3,13 +3,9 @@ from configparser import ConfigParser
 class GlobalOptions():
     ''' Container class for global options
     '''
-    def __init__(self, port, mcast_link, mcast_site, default_domain, default_domain_type, ipv4_gateway):
+    def __init__(self, port, default_domain):
         self.port = port
-        self.mcast_link = mcast_link
-        self.mcast_site = mcast_site
         self.default_domain = default_domain
-        self.default_domain_type = default_domain_type
-        self.ipv4_gateway = ipv4_gateway
 
 class DomainOptions():
     ''' Base container class for per domain options
@@ -21,7 +17,7 @@ class DomainOptions():
         '''
         from domain import DomainType
 
-        domain_type = parser.get(section, 'DomainType', fallback=globals.default_domain_type)
+        domain_type = parser.get(section, 'DomainType', fallback='simple')
         # Get DomainOptions subclass for type and instantiate
         return DomainType.get(domain_type.lower()).options(section, parser, globals)
 
@@ -32,9 +28,9 @@ class DomainOptions():
 
         self.name = name
         self.interfaces = list(map(str.strip, parser.get(name, 'Interfaces', fallback='').split(',')))
-        self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback=globals.mcast_link)
-        self.mcast_site = parser.get(name, 'MulticastSiteAddress', fallback=globals.mcast_site)
-        self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=globals.ipv4_gateway)
+        self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback='ff02::2:1001')
+        self.mcast_site = parser.get(name, 'MulticastSiteAddress', fallback='ff05::2:1001')
+        self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=None)
         self.domain_type = Domain
 
 class BatmanDomainOptions(DomainOptions):
@@ -77,12 +73,8 @@ class Config():
         ''' Set all global options
         '''
         self.globals = GlobalOptions(
-            parser.getint(None, 'Port', fallback=1001),
-            parser.get(None, 'MulticastLinkAddress', fallback='ff02::2:1001'),
-            parser.get(None, 'MulticastSiteAddress', fallback='ff05::2:1001'),
-            parser.get(None, 'DefaultDomain', fallback=None),
-            parser.get(None, 'DefaultDomainType', fallback='simple'),
-            parser.get(None, 'IPv4Gateway', fallback=None),
+            parser.getint('Defaults', 'Port', fallback=1001),
+            parser.get('Defaults', 'DefaultDomain', fallback=None)
         )
 
     def _initialize_domain_options(self, parser, domain):

@@ -15,7 +15,7 @@ MulticastSiteAddress: ff05::2:1001
 DefaultDomain: ffki
 # Default domain type
 # optional
-DefaultDomainType: batadv
+DomainType: batadv
 # Default ddhcpd IPv4 gateway address
 # optional
 IPv4Gateway: 10.116.128.8
@@ -24,7 +24,7 @@ IPv4Gateway: 10.116.128.8
 # User your own domain name here
 [ffki]
 # This is a batman domain
-# optional, mandatory if DefaultDomainType not set, default: @DefaultDomainType
+# optional, mandatory if DomainType not set, default: @DomainType
 # supported domain types are: simple, batadv
 DomainType: batadv
 # Batman interface
