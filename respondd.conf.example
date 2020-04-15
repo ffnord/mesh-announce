@@ -38,7 +38,7 @@ MulticastSiteAddress: ff05::2:1001
 # only for batadv domains, defaults to bat-<domain name>
 BatmanInterface: bat-ffki
 # Other listen interfaces
-# optional, specify listen/multicast interfaces for this domain here
+# optional, specify comma separated list of listen/multicast interfaces for this domain here
 Interfaces: mvpn-ffki
 # IPv4 gateway option for ddhcpd
 # optional, default: @IPv4Gateway
