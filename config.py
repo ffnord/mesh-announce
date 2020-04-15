@@ -21,9 +21,9 @@ class DomainOptions():
         '''
         from domain import DomainType
 
-        type = parser.get(section, 'DomainType', fallback=globals.default_domain_type)
+        domain_type = parser.get(section, 'DomainType', fallback=globals.default_domain_type)
         # Get DomainOptions subclass for type and instantiate
-        return DomainType.get(type.lower()).options(section, parser, globals)
+        return DomainType.get(domain_type.lower()).options(section, parser, globals)
 
     def __init__(self, name, parser, globals):
         ''' Initialize common options
