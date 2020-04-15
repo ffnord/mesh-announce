@@ -14,7 +14,8 @@ MulticastSiteAddress: ff05::2:1001
 # are mapped to this domain
 DefaultDomain: ffki
 # Default domain type
-# optional
+# optional, default: simple
+# supported domain types are: simple, batadv
 DomainType: batadv
 # Default ddhcpd IPv4 gateway address
 # optional
@@ -24,11 +25,17 @@ IPv4Gateway: 10.116.128.8
 # User your own domain name here
 [ffki]
 # This is a batman domain
-# optional, mandatory if DomainType not set, default: @DomainType
+# optional, default: @Defaults.DomainType
 # supported domain types are: simple, batadv
 DomainType: batadv
+# Link local listen addresses
+# optional, default: @Defaults.MulticastLinkAddress
+MulticastLinkAddress: ff02::2:1001
+# Site local listen addresses
+# optional, default: @Defautls.MulticastSiteAddress
+MulticastSiteAddress: ff05::2:1001
 # Batman interface
-# only for batadv domains, mandatory for batadv domains
+# only for batadv domains, defaults to bat-<domain name>
 BatmanInterface: bat-ffki
 # Other listen interfaces
 # optional, specify listen/multicast interfaces for this domain here
