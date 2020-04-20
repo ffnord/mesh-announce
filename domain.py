@@ -6,6 +6,9 @@ class Domain():
     def __init__(self, config):
         self.config = config
 
+    def get_name(self):
+        return self.config.name
+
     def get_ipv4_gateway(self):
         return self.config.ipv4_gateway
 
@@ -25,7 +28,10 @@ class Domain():
         ''' Returns dict of parameters respondd queries are
             expected to arrive on
         '''
-        return { 'mesh_ipv4': self.get_ipv4_gateway() }
+        return {
+            'domain_code': self.get_name(),
+            'mesh_ipv4': self.get_ipv4_gateway()
+        }
 
 class BatadvDomain(Domain):
     ''' Container object for a batman freifunk domain
