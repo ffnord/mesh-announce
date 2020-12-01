@@ -6,17 +6,35 @@ class Domain():
     def __init__(self, config):
         self.config = config
 
+    def get_contact(self):
+        return self.config.contact
+
     def get_name(self):
         return self.config.name
 
     def get_ipv4_gateway(self):
         return self.config.ipv4_gateway
 
+    def get_hardware_model(self):
+        return self.config.hardware_model
+
+    def get_hostname(self):
+        return self.config.hostname
+
     def get_multicast_address_link(self):
         return self.config.mcast_link
 
     def get_multicast_address_site(self):
         return self.config.mcast_site
+
+    def get_latitude(self):
+        return self.config.latitude
+
+    def get_longitude(self):
+        return self.config.longitude
+
+    def is_gateway(self):
+        return self.config.is_gateway
 
     def get_interfaces(self):
         ''' Returns list off all interfaces respondd queries are
@@ -29,7 +47,13 @@ class Domain():
             expected to arrive on
         '''
         return {
+            'contact': self.get_contact(),
             'domain_code': self.get_name(),
+            'hardware_model': self.get_hardware_model(),
+            'hostname': self.get_hostname(),
+            'is_gateway': self.is_gateway(),
+            'latitude': self.get_latitude(),
+            'longitude': self.get_longitude(),
             'mesh_ipv4': self.get_ipv4_gateway()
         }
 

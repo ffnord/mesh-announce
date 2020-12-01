@@ -2,6 +2,6 @@ import providers
 
 class Source(providers.DataSource):
     def required_args(self):
-        return ['hostname']
-    def call(self, hostname):
-        return hostname
+        return ['contact']
+    def call(self, contact):
+        return contact
