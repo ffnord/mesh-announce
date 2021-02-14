@@ -8,7 +8,7 @@ class Source(providers.DataSource):
         return ['batadv_dev']
 
     def call(self, batadv_dev):
-        lines = call(['batctl', '-m', batadv_dev, 'o', '-nH'])
+        lines = call(['batctl', 'meshif', batadv_dev, 'o', '-nH'])
         neighbours = {}
         prefix_lower = '/sys/class/net/{}/lower_'.format(batadv_dev)
         for dev in glob(prefix_lower + '*'):

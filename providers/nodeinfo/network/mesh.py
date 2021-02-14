@@ -13,7 +13,7 @@ class Source(providers.DataSource):
                         open('/sys/class/net/{}/address'.format(iface)).read().strip()
                         for iface in map(
                             lambda line: line.split(':')[0],
-                            call(['batctl', '-m', batadv_dev, 'if'])
+                            call(['batctl', 'meshif', batadv_dev, 'if'])
                         )
                     ]
                 }
