@@ -17,6 +17,9 @@ DefaultDomain: ffki
 # optional, default: simple
 # supported domain types are: simple, batadv
 DomainType: batadv
+# Default fastd-public-key to use
+# optional, default is None
+# FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
 # Default ddhcpd IPv4 gateway address
 # optional
 IPv4Gateway: 10.116.128.8
@@ -46,6 +49,9 @@ VPN: True
 # optional, default: @Defaults.DomainType
 # supported domain types are: simple, batadv
 DomainType: batadv
+# Default fastd-public-key to use
+# optional, default: @FastdPublickey
+# FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
 # Link local listen addresses
 # optional, default: @Defaults.MulticastLinkAddress
 MulticastLinkAddress: ff02::2:1001
