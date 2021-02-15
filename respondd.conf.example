@@ -20,6 +20,10 @@ DomainType: batadv
 # Default fastd-public-key to use
 # optional, default is None
 # FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
+# Default vpn protocol to use
+# optional, default is fastd
+# supported protocols are: fastd, None
+VPNProtocol: fastd
 # Default ddhcpd IPv4 gateway address
 # optional
 IPv4Gateway: 10.116.128.8
@@ -57,6 +61,10 @@ DomainType: batadv
 # Default fastd-public-key to use
 # optional, default: @FastdPublickey
 # FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
+# Default vpn protocol to use
+# optional, default is @VPNProtocol
+# supported protocols are: fastd, None
+VPNProtocol: fastd
 # Link local listen addresses
 # optional, default: @Defaults.MulticastLinkAddress
 MulticastLinkAddress: ff02::2:1001
