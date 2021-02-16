@@ -39,7 +39,7 @@ class DomainOptions():
         self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback='ff02::2:1001')
         self.mcast_site = parser.get(name, 'MulticastSiteAddress', fallback='ff05::2:1001')
         self.vpn_pubkey = parser.get(name, 'FastdPublicKey', fallback=None)
-        self.vpn_proto = parser.get(name, 'VPNProtocol', fallback='fastd')
+        self.vpn_protos = frozenset(parser.get(name, 'VPNProtocols', fallback='fastd').split(','))
         self.ipv4_gateway = parser.get(name, 'IPv4Gateway', fallback=None)
         self.domain_code = parser.get(name, 'DomainCode', fallback=name)
         self.domain_type = Domain
