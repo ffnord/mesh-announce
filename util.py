@@ -1,18 +1,22 @@
 import json
 import os
-from psutil import AccessDenied
-from psutil import NoSuchProcess
-from psutil import process_iter
-from psutil import ZombieProcess
 
 
 def check_process_running(name):
     """ Check if name is a running process.
 
-        The parameter name is case insensitive and does not need do be the whole name, but can be a part of it.
-        Returns True in case there was at least one process, whose name contains 'name'.
-        Careful: In case of some common errors False is returned without warning.
+        The parameter name is case insensitive and does not need
+        do be the whole name, but can be a part of it.
+        Returns True in case there was at least one process,
+        whose name contains 'name'.
+        Careful:
+        In case of some common errors False is returned without warning.
+        May raise ImportError.
     """
+    from psutil import AccessDenied
+    from psutil import NoSuchProcess
+    from psutil import process_iter
+    from psutil import ZombieProcess
     for proc in process_iter():
         try:
             if name.lower() in proc.name().lower():
