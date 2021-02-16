@@ -14,6 +14,7 @@ information needed for example to display the name of the server on node-maps.
  * ethtool
  * python3 (>= 3.3)
  * If using alfred: alfred binary in PATH
+ * If using fastd: python-psutil
 
 ## Setup
 
