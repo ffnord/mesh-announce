@@ -9,6 +9,9 @@ class Domain():
     def get_contact(self):
         return self.config.contact
 
+    def get_domain_code(self):
+        return self.config.domain_code
+
     def get_name(self):
         return self.config.name
 
@@ -50,7 +53,8 @@ class Domain():
         '''
         return {
             'contact': self.get_contact(),
-            'domain_code': self.get_name(),
+            'domain_code': self.get_domain_code(),
+            'primary_domain_code': self.get_name(),
             'hardware_model': self.get_hardware_model(),
             'hostname': self.get_hostname(),
             'is_gateway': self.is_gateway(),
