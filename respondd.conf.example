@@ -45,6 +45,11 @@ VPN: True
 # A domain
 # User your own domain name here
 [ffki]
+# overwrite for domain_code
+# optional: If specified, domain_code emits this instead of primary_domain_code,
+# which is taken from the section title
+# default: section title
+DomainCode: kiel_gaarden
 # This is a batman domain
 # optional, default: @Defaults.DomainType
 # supported domain types are: simple, batadv
