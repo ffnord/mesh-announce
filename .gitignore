@@ -1,2 +1,5 @@
-__pycache__/
 *.swp
+.idea/
+respondd.conf
+venv/
+__pycache__/
