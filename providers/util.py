@@ -1,5 +1,6 @@
 import subprocess
 import re
+import os
 
 RE_BATCTL_VERSION = re.compile('([0-9]+)')
 BATCTL_VERSION_2019_3 = [2019, 3]
@@ -23,5 +24,8 @@ def call_batctl(batadv_dev, args):
         meshif = '-m'
 
     base_args = ['batctl', meshif, batadv_dev]
+
+    if os.geteuid() > 0:
+        base_args.insert(0, 'sudo')
 
     return call(base_args + args)

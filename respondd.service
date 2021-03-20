@@ -5,7 +5,10 @@ After=network.target
 [Service]
 ExecStart=/opt/mesh-announce/respondd.py -d /opt/mesh-announce/providers -i <your-clientbridge-if> -i <your-mesh-vpn-if> -b <your-batman-if> -m <mesh ipv4 address>
 Restart=always
+WorkingDirectory=/opt/mesh-announce
 Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# User=mesh-announce
+# AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
