@@ -2,9 +2,9 @@ import providers
 
 
 class Source(providers.DataSource):
-    def call(self, vpn_protos, vpn_pubkey):
+    def call(self, vpn_protos, fastd_pubkey):
         if 'fastd' in vpn_protos:
-            return vpn_pubkey
+            return fastd_pubkey
 
     def required_args(self):
-        return ['vpn_protos', 'vpn_pubkey']
+        return ['vpn_protos', 'fastd_pubkey']
