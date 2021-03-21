@@ -38,8 +38,12 @@ class Domain():
 
     def is_gateway(self):
         return self.config.is_gateway
+
     def get_vpn_pubkey(self):
         return self.config.vpn_pubkey
+
+    def get_vpn_protos(self):
+        return self.config.vpn_protos
 
     def get_interfaces(self):
         ''' Returns list off all interfaces respondd queries are
@@ -61,7 +65,8 @@ class Domain():
             'latitude': self.get_latitude(),
             'longitude': self.get_longitude(),
             'mesh_ipv4': self.get_ipv4_gateway(),
-            'vpn_pubkey': self.get_vpn_pubkey()
+            'vpn_pubkey': self.get_vpn_pubkey(),
+            'vpn_protos': self.get_vpn_protos()
         }
 
 class BatadvDomain(Domain):
