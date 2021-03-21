@@ -20,10 +20,13 @@ DomainType: batadv
 # Default fastd-public-key to use
 # optional, default is None
 # FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
+# Default WireGuard-public-key to use
+# optional, default is None
+# WireGuardPublicKey: 0000000000000000000000000000000000000000000=
 # Default vpn protocols to use
 # may contain csv if more than one protocol is used
 # optional, default is fastd
-# supported protocols are: fastd, None
+# supported protocols are: fastd, wireguard, None
 VPNProtocols: fastd
 # Default ddhcpd IPv4 gateway address
 # optional
@@ -62,10 +65,13 @@ DomainType: batadv
 # Default fastd-public-key to use
 # optional, default: @FastdPublickey
 # FastdPublicKey: 0000000000000000000000000000000000000000000000000000000000000000
+# Default WireGuard-public-key to use
+# optional, default: @WireGuardPublickey
+# WirGuardPublicKey: 0000000000000000000000000000000000000000000=
 # Default vpn protocols to use
 # may contain csv if more than one protocol is used
 # optional, default is @VPNProtocol
-# supported protocols are: fastd, None
+# supported protocols are: fastd, wireguard, None
 VPNProtocols: fastd
 # Link local listen addresses
 # optional, default: @Defaults.MulticastLinkAddress
