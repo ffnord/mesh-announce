@@ -33,7 +33,7 @@ class DomainOptions():
         self.hostname = parser.get(name, 'Hostname', fallback=socket.gethostname())
         self.name = name
         self.interfaces = list(map(str.strip, parser.get(name, 'Interfaces', fallback='').split(',')))
-        self.is_gateway = parser.getboolean(name, 'VPN', fallback='True')
+        self.is_gateway = parser.getboolean(name, 'VPN', fallback=True)
         self.longitude = parser.getfloat(name, 'Longitude', fallback=None)
         self.latitude = parser.getfloat(name, 'Latitude', fallback=None)
         self.mcast_link = parser.get(name, 'MulticastLinkAddress', fallback='ff02::2:1001')
