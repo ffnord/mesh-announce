@@ -27,7 +27,9 @@ class DataSource():
     def is_enabled(self, env):
         ''' Override when special preconditions for calling exist
         '''
-        has_args = map(lambda arg: arg in env and env[arg] != None, self.required_args())
+        has_args = map(lambda arg: arg.split(":")[0] in env and \
+            ":" not in arg and env[arg] != None or \
+            ":" in arg and all(value in env[arg.split(":")[0]] for value in arg.split(":")[1:]), self.required_args())
         return reduce(bool.__and__, has_args, True)
 
 
@@ -105,7 +107,8 @@ class Source():
         cache = SourceCache.getinstance()
 
         args = []
-        for argname in self.source.required_args():
+        for fullarg in self.source.required_args():
+            argname = fullarg.split(":")[0]
             args.append(env[argname])
 
         cache_result = cache.get(frozenset([self] + args))

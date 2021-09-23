@@ -7,4 +7,4 @@ class Source(providers.DataSource):
             return open('/sys/module/wireguard/version').read().strip()
 
     def required_args(self):
-        return ['vpn_protos']
+        return ['vpn_protos:wireguard']

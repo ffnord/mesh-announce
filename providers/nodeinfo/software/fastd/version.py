@@ -8,4 +8,4 @@ class Source(providers.DataSource):
             return call(['fastd', '-v'])[0].split(' ')[1]
 
     def required_args(self):
-        return ['vpn_protos']
+        return ['vpn_protos:fastd']
