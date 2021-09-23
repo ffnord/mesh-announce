@@ -11,4 +11,4 @@ class Source(providers.DataSource):
                 return True
 
     def required_args(self):
-        return ['vpn_protos']
+        return ['vpn_protos:fastd']

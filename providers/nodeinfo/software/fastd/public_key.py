@@ -7,4 +7,4 @@ class Source(providers.DataSource):
             return fastd_pubkey
 
     def required_args(self):
-        return ['vpn_protos', 'fastd_pubkey']
+        return ['vpn_protos:fastd', 'fastd_pubkey']

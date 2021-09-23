@@ -8,4 +8,4 @@ class Source(providers.DataSource):
             return exists("/sys/module/wireguard/initstate")
 
     def required_args(self):
-        return ['vpn_protos']
+        return ['vpn_protos:wireguard']

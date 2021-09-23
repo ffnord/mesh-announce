@@ -7,4 +7,4 @@ class Source(providers.DataSource):
             return wireguard_pubkey
 
     def required_args(self):
-        return ['vpn_protos', 'wireguard_pubkey']
+        return ['vpn_protos:wireguard', 'wireguard_pubkey']
