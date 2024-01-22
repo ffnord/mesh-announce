@@ -20,6 +20,6 @@ class Source(providers.DataSource):
                     line = line.replace(s, '')
                 fields = line.split()
                 if fields[4] == ifname and fields[0] == fields[3]:
-                    ifneighbours[fields[0]] = {'lastseen': float(fields[1].strip('s')), 'tq': int(fields[2])}
+                    ifneighbours[fields[0]] = {'lastseen': float(fields[1].strip('s')), 'tq': int(float(fields[2]))}
             neighbours[mac] = {'neighbours': ifneighbours}
         return neighbours
