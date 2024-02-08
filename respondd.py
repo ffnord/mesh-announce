@@ -7,6 +7,8 @@ import socket
 import struct
 import json
 import os
+import syslog
+from inspect import currentframe, getframeinfo
 from zlib import compress
 
 from config import Config
@@ -51,9 +53,18 @@ def get_handler(providers):
                     response = str.encode(json.dumps(answer))
 
             if response:
-                socket.sendto(response, self.client_address)
+                try:
+                    socket.sendto(response, self.client_address)
+                except OSError as e:
+                    if e.errno == 101:
+                        frame = getframeinfo(currentframe())
+                        syslog.syslog(
+                            f"Address unreachable: {self.client_address} (line {frame.lineno})")
+                    else:
+                        raise
 
     return ResponddUDPHandler
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(usage="""
